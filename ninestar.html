@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>九宮飛星詳解 | 黃曆通勝</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&display=swap');
+
+  :root {
+    --red: #B71C1C;
+    --red-light: #E53935;
+    --red-dark: #7F0000;
+    --gold: #F9A825;
+    --gold-dark: #C17900;
+    --gold-light: #FDD835;
+    --bg: #FAF3E8;
+    --bg-dark: #F0E6D2;
+    --card: #FFFDF7;
+    --text: #2C1810;
+    --text-light: #7A6B5D;
+    --border: #E0D1B8;
+    --shadow: 0 4px 24px rgba(0,0,0,.08);
+    --shadow-lg: 0 8px 40px rgba(0,0,0,.12);
+
+    --water: #1565C0;
+    --water-bg: #E3F2FD;
+    --earth: #4E342E;
+    --earth-bg: #EFEBE9;
+    --wood: #2E7D32;
+    --wood-bg: #E8F5E9;
+    --metal: #37474F;
+    --metal-bg: #ECEFF1;
+    --fire: #B71C1C;
+    --fire-bg: #FFEBEE;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: "Noto Serif TC", "微軟正黑體", serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.9;
+    overflow-x: hidden;
+  }
+
+  /* ===== Header ===== */
+  .hero {
+    background: linear-gradient(135deg, var(--red-dark) 0%, var(--red) 50%, var(--red-light) 100%);
+    color: #fff;
+    padding: 3rem 1.5rem 4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '九';
+    position: absolute;
+    left: -5%; top: -20%;
+    font-size: 20rem;
+    opacity: .04;
+    font-weight: 900;
+    line-height: 1;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 10px;
+    background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-light), var(--gold), var(--gold-dark));
+  }
+  .hero h1 {
+    font-size: 3rem;
+    letter-spacing: 1.2rem;
+    text-shadow: 3px 3px 8px rgba(0,0,0,.3);
+    margin-bottom: .5rem;
+    position: relative;
+  }
+  .hero .sub {
+    font-size: 1.1rem;
+    opacity: .85;
+    letter-spacing: .5rem;
+    position: relative;
+  }
+  .hero .loshu-mini {
+    display: inline-grid;
+    grid-template-columns: repeat(3, 2rem);
+    gap: 2px;
+    margin-top: 1.5rem;
+    background: rgba(255,255,255,.15);
+    padding: 3px;
+    border-radius: 6px;
+    position: relative;
+  }
+  .hero .loshu-mini span {
+    width: 2rem; height: 2rem;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .9rem;
+    font-weight: 700;
+    background: rgba(255,255,255,.1);
+    border-radius: 3px;
+  }
+
+  /* ===== Navigation ===== */
+  .nav-bar {
+    background: #fff;
+    border-bottom: 2px solid var(--border);
+    padding: .8rem 1rem;
+    display: flex;
+    justify-content: center;
+    gap: .5rem;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow);
+  }
+  .nav-btn {
+    padding: .4rem 1rem;
+    border: 2px solid var(--border);
+    border-radius: 25px;
+    background: #fff;
+    color: var(--text);
+    font-size: .85rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all .2s;
+    text-decoration: none;
+  }
+  .nav-btn:hover, .nav-btn.active {
+    background: var(--red);
+    color: #fff;
+    border-color: var(--red);
+  }
+
+  /* ===== Container ===== */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  /* ===== Back Link ===== */
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    color: var(--red);
+    text-decoration: none;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    padding: .6rem 1.2rem;
+    border: 2px solid var(--red);
+    border-radius: 8px;
+    transition: all .2s;
+  }
+  .back:hover { background: var(--red); color: #fff; }
+
+  /* ===== Section Title ===== */
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 3rem 0 1.5rem;
+    padding-bottom: .8rem;
+    border-bottom: 3px solid var(--gold);
+  }
+  .section-title .num {
+    width: 3rem; height: 3rem;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--red);
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 900;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .section-title h2 {
+    font-size: 1.8rem;
+    color: var(--red);
+    letter-spacing: .3rem;
+  }
+  .section-title .en {
+    font-size: .8rem;
+    color: var(--text-light);
+    letter-spacing: .1rem;
+  }
+
+  /* ===== Lo Shu Grid ===== */
+  .loshu-section {
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    gap: 3rem;
+    align-items: start;
+    margin: 2rem 0;
+  }
+  @media (max-width: 900px) {
+    .loshu-section { grid-template-columns: 1fr; }
+  }
+
+  .loshu-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    background: linear-gradient(135deg, var(--red-dark), var(--red));
+    padding: 6px;
+    border-radius: 16px;
+    box-shadow: var(--shadow-lg);
+    aspect-ratio: 1;
+  }
+  .loshu-cell {
+    background: var(--card);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: .8rem .5rem;
+    border-radius: 10px;
+    position: relative;
+    transition: all .3s;
+    cursor: default;
+  }
+  .loshu-cell:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 20px rgba(0,0,0,.15);
+    z-index: 2;
+  }
+  .loshu-cell.center-cell {
+    background: linear-gradient(135deg, #FFF8E1, #FFFDE7);
+    border: 2px solid var(--gold);
+  }
+  .loshu-cell .pos-label {
+    position: absolute;
+    top: 6px; left: 8px;
+    font-size: .6rem;
+    color: #aaa;
+    letter-spacing: .05rem;
+  }
+  .loshu-cell .star-num {
+    font-size: 3.5rem;
+    font-weight: 900;
+    line-height: 1;
+    transition: color .3s;
+  }
+  .loshu-cell .star-name {
+    font-size: .75rem;
+    color: var(--text-light);
+    margin-top: .2rem;
+    text-align: center;
+    line-height: 1.3;
+  }
+  .loshu-cell .dir-name {
+    font-size: .9rem;
+    font-weight: 700;
+    margin-top: .2rem;
+  }
+  .loshu-cell .fortune-dot {
+    position: absolute;
+    top: 8px; right: 8px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+  .fortune-dot.great-good { background: #4CAF50; box-shadow: 0 0 6px #4CAF50; }
+  .fortune-dot.good { background: #8BC34A; }
+  .fortune-dot.neutral { background: #FFC107; }
+  .fortune-dot.bad { background: #FF5722; }
+  .fortune-dot.great-bad { background: #D32F2F; box-shadow: 0 0 6px #D32F2F; }
+
+  /* Element Colors */
+  .el-water .star-num { color: var(--water); }
+  .el-water .dir-name { color: var(--water); }
+  .el-earth .star-num { color: var(--earth); }
+  .el-earth .dir-name { color: var(--earth); }
+  .el-wood .star-num { color: var(--wood); }
+  .el-wood .dir-name { color: var(--wood); }
+  .el-metal .star-num { color: var(--metal); }
+  .el-metal .dir-name { color: var(--metal); }
+  .el-fire .star-num { color: var(--fire); }
+  .el-fire .dir-name { color: var(--fire); }
+
+  /* Info Panel */
+  .loshu-info {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: var(--shadow);
+  }
+  .loshu-info h3 {
+    color: var(--red);
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    padding-bottom: .5rem;
+    border-bottom: 2px dashed var(--border);
+  }
+  .loshu-poem {
+    background: linear-gradient(135deg, #FFF8E1, #FFFDE7);
+    border: 2px solid var(--gold);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    text-align: center;
+    font-size: 1.2rem;
+    line-height: 2.2;
+    font-weight: 700;
+    color: var(--red-dark);
+  }
+  .loshu-poem small {
+    display: block;
+    font-size: .8rem;
+    color: var(--text-light);
+    font-weight: 400;
+    margin-top: .5rem;
+  }
+
+  /* ===== Flying Sequence ===== */
+  .fly-sequence {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .3rem;
+    flex-wrap: wrap;
+    margin: 2rem 0;
+    padding: 2rem;
+    background: var(--card);
+    border-radius: 16px;
+    border: 2px solid var(--border);
+    box-shadow: var(--shadow);
+  }
+  .fly-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .3rem;
+  }
+  .fly-num {
+    width: 3rem; height: 3rem;
+    display: flex; align-items: center; justify-content: center;
+    border: 3px solid var(--border);
+    border-radius: 10px;
+    font-size: 1.5rem;
+    font-weight: 900;
+    background: #fff;
+    transition: all .3s;
+    position: relative;
+  }
+  .fly-num.center-fly {
+    border-color: var(--gold);
+    background: linear-gradient(135deg, #FFF8E1, #FFFDE7);
+    box-shadow: 0 0 12px rgba(249,168,37,.3);
+  }
+  .fly-num .step-order {
+    position: absolute;
+    top: -8px; right: -8px;
+    width: 1.2rem; height: 1.2rem;
+    background: var(--red);
+    color: #fff;
+    font-size: .6rem;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .fly-dir {
+    font-size: .7rem;
+    color: var(--text-light);
+    font-weight: 600;
+  }
+  .fly-arrow {
+    color: var(--gold);
+    font-size: 1.5rem;
+    font-weight: 900;
+    margin: 0 .2rem;
+  }
+
+  /* ===== Star Cards ===== */
+  .stars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+  }
+
+  .star-card {
+    background: var(--card);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: all .3s;
+    border: 2px solid var(--border);
+  }
+  .star-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .star-card-header {
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .star-card-header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    opacity: .05;
+  }
+  .star-card-header.el-water::before { background: var(--water); }
+  .star-card-header.el-earth::before { background: var(--earth); }
+  .star-card-header.el-wood::before { background: var(--wood); }
+  .star-card-header.el-metal::before { background: var(--metal); }
+  .star-card-header.el-fire::before { background: var(--fire); }
+
+  .star-icon {
+    width: 4.5rem; height: 4.5rem;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    font-size: 2.5rem;
+    font-weight: 900;
+    border: 4px solid;
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+  }
+  .star-icon.el-water { border-color: var(--water); color: var(--water); background: var(--water-bg); }
+  .star-icon.el-earth { border-color: var(--earth); color: var(--earth); background: var(--earth-bg); }
+  .star-icon.el-wood { border-color: var(--wood); color: var(--wood); background: var(--wood-bg); }
+  .star-icon.el-metal { border-color: var(--metal); color: var(--metal); background: var(--metal-bg); }
+  .star-icon.el-fire { border-color: var(--fire); color: var(--fire); background: var(--fire-bg); }
+
+  .star-header-info {
+    position: relative;
+    z-index: 1;
+  }
+  .star-header-info h3 {
+    font-size: 1.4rem;
+    margin-bottom: .2rem;
+  }
+  .star-header-info .alias {
+    font-size: .85rem;
+    color: var(--text-light);
+  }
+  .star-header-info .fortune-badge {
+    display: inline-block;
+    padding: .2rem .8rem;
+    border-radius: 20px;
+    font-size: .8rem;
+    font-weight: 700;
+    margin-top: .3rem;
+  }
+  .fortune-badge.great-good { background: #E8F5E9; color: #2E7D32; border: 1px solid #81C784; }
+  .fortune-badge.good { background: #F1F8E9; color: #558B2F; border: 1px solid #AED581; }
+  .fortune-badge.neutral { background: #FFF8E1; color: #F57F17; border: 1px solid #FFD54F; }
+  .fortune-badge.bad { background: #FBE9E7; color: #BF360C; border: 1px solid #FF8A65; }
+  .fortune-badge.great-bad { background: #FFEBEE; color: #C62828; border: 1px solid #EF9A9A; }
+
+  .star-card-body {
+    padding: 0 1.5rem 1.5rem;
+  }
+  .star-card-body dl {
+    display: grid;
+    grid-template-columns: 4.5rem 1fr;
+    gap: .4rem .8rem;
+    align-items: baseline;
+  }
+  .star-card-body dt {
+    font-weight: 700;
+    color: var(--red);
+    font-size: .85rem;
+    text-align: right;
+  }
+  .star-card-body dd {
+    font-size: .9rem;
+    color: var(--text);
+  }
+  .star-card-body .divider {
+    grid-column: 1 / -1;
+    height: 1px;
+    background: var(--border);
+    margin: .4rem 0;
+  }
+
+  /* ===== Five Elements ===== */
+  .wuxing-section {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 3rem;
+    align-items: center;
+    margin: 2rem 0;
+  }
+  @media (max-width: 900px) {
+    .wuxing-section { grid-template-columns: 1fr; }
+  }
+
+  .wuxing-diagram {
+    position: relative;
+    width: 350px;
+    height: 350px;
+    margin: 0 auto;
+  }
+  .wuxing-node {
+    position: absolute;
+    width: 80px; height: 80px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    border-radius: 50%;
+    font-weight: 900;
+    font-size: 1.5rem;
+    border: 4px solid;
+    box-shadow: var(--shadow);
+    transition: all .3s;
+    cursor: default;
+  }
+  .wuxing-node:hover {
+    transform: scale(1.1);
+    box-shadow: var(--shadow-lg);
+  }
+  .wuxing-node .el-sub { font-size: .6rem; font-weight: 400; }
+
+  .wuxing-node.node-wood  { top: 0; left: 50%; transform: translateX(-50%); background: var(--wood-bg); border-color: var(--wood); color: var(--wood); }
+  .wuxing-node.node-fire  { top: 20%; right: 5%; background: var(--fire-bg); border-color: var(--fire); color: var(--fire); }
+  .wuxing-node.node-earth { bottom: 0; left: 50%; transform: translateX(-50%); background: var(--earth-bg); border-color: var(--earth); color: var(--earth); }
+  .wuxing-node.node-metal { top: 20%; left: 5%; background: var(--metal-bg); border-color: var(--metal); color: var(--metal); }
+  .wuxing-node.node-water { bottom: 20%; left: 50%; transform: translateX(-50%); background: var(--water-bg); border-color: var(--water); color: var(--water); }
+
+  .wuxing-svg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+  }
+
+  .wuxing-cycles {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .cycle-card {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+  }
+  .cycle-card h4 {
+    color: var(--red);
+    font-size: 1.1rem;
+    margin-bottom: .8rem;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+  .cycle-card h4 .dot {
+    width: .8rem; height: .8rem;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .cycle-card h4 .dot.green { background: #4CAF50; }
+  .cycle-card h4 .dot.red { background: #F44336; }
+  .cycle-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+  }
+  .cycle-item {
+    background: #fff;
+    border: 1px solid var(--border);
+    padding: .4rem 1rem;
+    border-radius: 25px;
+    font-size: .9rem;
+    font-weight: 600;
+    transition: all .2s;
+  }
+  .cycle-item:hover {
+    background: var(--bg);
+    border-color: var(--gold);
+  }
+
+  /* ===== Era Table ===== */
+  .era-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+    background: var(--card);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .era-table th {
+    background: linear-gradient(135deg, var(--red-dark), var(--red));
+    color: #fff;
+    padding: 1rem;
+    font-weight: 700;
+    font-size: .95rem;
+    letter-spacing: .1rem;
+  }
+  .era-table td {
+    padding: .8rem 1rem;
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+    font-size: .9rem;
+  }
+  .era-table tr:nth-child(even) { background: #FAF7F0; }
+  .era-table tr:hover { background: #FFF8E1; }
+  .era-table .current-era {
+    background: #E8F5E9 !important;
+    font-weight: 700;
+  }
+  .era-table .current-era td {
+    color: #2E7D32;
+    border-bottom-color: #81C784;
+  }
+  .era-badge {
+    display: inline-block;
+    padding: .2rem .6rem;
+    border-radius: 15px;
+    font-size: .75rem;
+    font-weight: 700;
+  }
+  .era-badge.now { background: #E8F5E9; color: #2E7D32; border: 1px solid #81C784; }
+  .era-badge.past { background: #F5F5F5; color: #9E9E9E; border: 1px solid #E0E0E0; }
+
+  /* ===== Reading Guide ===== */
+  .guide-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+  .guide-card {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    transition: all .3s;
+  }
+  .guide-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-2px);
+  }
+  .guide-card .guide-num {
+    width: 2.5rem; height: 2.5rem;
+    background: var(--red);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    font-weight: 900;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+  .guide-card h4 {
+    color: var(--red);
+    font-size: 1.1rem;
+    margin-bottom: .5rem;
+  }
+  .guide-card p {
+    font-size: .9rem;
+    color: var(--text-light);
+    line-height: 1.8;
+  }
+
+  /* ===== Footer ===== */
+  .footer {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-light);
+    font-size: .85rem;
+    border-top: 2px solid var(--border);
+    margin-top: 4rem;
+    background: var(--bg-dark);
+  }
+
+  /* ===== Animations ===== */
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .6; }
+  }
+  .pulse { animation: pulse 2s infinite; }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 768px) {
+    .hero h1 { font-size: 2rem; letter-spacing: .6rem; }
+    .hero .sub { font-size: .9rem; letter-spacing: .3rem; }
+    .section-title h2 { font-size: 1.3rem; }
+    .stars-grid { grid-template-columns: 1fr; }
+    .star-card-header { flex-direction: column; text-align: center; }
+    .star-card-body dl { grid-template-columns: 1fr; }
+    .star-card-body dt { text-align: left; }
+    .wuxing-diagram { width: 280px; height: 280px; }
+    .wuxing-node { width: 60px; height: 60px; font-size: 1.1rem; }
+    .fly-num { width: 2.2rem; height: 2.2rem; font-size: 1.1rem; }
+  }
+  @media (max-width: 480px) {
+    .container { padding: 1rem; }
+    .hero { padding: 2rem 1rem 3rem; }
+    .hero h1 { font-size: 1.6rem; letter-spacing: .4rem; }
+    .loshu-grid { max-width: 300px; margin: 0 auto; }
+    .loshu-cell .star-num { font-size: 2.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== Hero ===== -->
+<div class="hero">
+  <h1>九 宮 飛 星</h1>
+  <div class="sub">洛書九宮 ‧ 飛星詳解 ‧ 吉凶方位 ‧ 風水要訣</div>
+  <div class="loshu-mini">
+    <span>4</span><span>9</span><span>2</span>
+    <span>3</span><span>5</span><span>7</span>
+    <span>8</span><span>1</span><span>6</span>
+  </div>
+</div>
+
+<!-- ===== Nav ===== -->
+<div class="nav-bar">
+  <a href="#loshu" class="nav-btn active">洛書九宮</a>
+  <a href="#sequence" class="nav-btn">飛行順序</a>
+  <a href="#stars" class="nav-btn">九星詳解</a>
+  <a href="#wuxing" class="nav-btn">五行生剋</a>
+  <a href="#era" class="nav-btn">三元九運</a>
+  <a href="#guide" class="nav-btn">解讀指南</a>
+  <a href="index.html" class="nav-btn">← 返回黃曆</a>
+</div>
+
+<div class="container">
+
+<!-- ===== 一、洛書九宮 ===== -->
+<div id="loshu">
+  <div class="section-title">
+    <div class="num">壹</div>
+    <div>
+      <h2>洛書九宮圖</h2>
+      <div class="en">Lo Shu Square · Nine Palaces</div>
+    </div>
+  </div>
+
+  <p style="margin-bottom:1.5rem;font-size:1.05rem;">
+    九宮飛星源自上古「洛書」。相傳大禹治水時，神龜負書出洛水，背上紋路呈現九組數字，排列成三階幻方——橫、豎、斜三數相加皆為十五。此即「洛書九宮」，為中國風水學、數理學之根基。
+  </p>
+
+  <div class="loshu-section">
+    <div class="loshu-grid">
+      <div class="loshu-cell el-wood">
+        <span class="pos-label">巽宮</span>
+        <div class="fortune-dot good"></div>
+        <div class="star-num">4</div>
+        <div class="star-name">四綠文曲</div>
+        <div class="dir-name">東南</div>
+      </div>
+      <div class="loshu-cell el-fire">
+        <span class="pos-label">離宮</span>
+        <div class="fortune-dot great-good"></div>
+        <div class="star-num">9</div>
+        <div class="star-name">九紫右弼</div>
+        <div class="dir-name">南</div>
+      </div>
+      <div class="loshu-cell el-earth">
+        <span class="pos-label">坤宮</span>
+        <div class="fortune-dot great-bad"></div>
+        <div class="star-num">2</div>
+        <div class="star-name">二黑巨門</div>
+        <div class="dir-name">西南</div>
+      </div>
+      <div class="loshu-cell el-wood">
+        <span class="pos-label">震宮</span>
+        <div class="fortune-dot bad"></div>
+        <div class="star-num">3</div>
+        <div class="star-name">三碧祿存</div>
+        <div class="dir-name">東</div>
+      </div>
+      <div class="loshu-cell center-cell el-earth">
+        <span class="pos-label">中宮</span>
+        <div class="fortune-dot great-bad"></div>
+        <div class="star-num">5</div>
+        <div class="star-name">五黃廉貞</div>
+        <div class="dir-name">中</div>
+      </div>
+      <div class="loshu-cell el-metal">
+        <span class="pos-label">兌宮</span>
+        <div class="fortune-dot bad"></div>
+        <div class="star-num">7</div>
+        <div class="star-name">七赤破軍</div>
+        <div class="dir-name">西</div>
+      </div>
+      <div class="loshu-cell el-earth">
+        <span class="pos-label">艮宮</span>
+        <div class="fortune-dot great-good"></div>
+        <div class="star-num">8</div>
+        <div class="star-name">八白左輔</div>
+        <div class="dir-name">東北</div>
+      </div>
+      <div class="loshu-cell el-water">
+        <span class="pos-label">坎宮</span>
+        <div class="fortune-dot great-good"></div>
+        <div class="star-num">1</div>
+        <div class="star-name">一白貪狼</div>
+        <div class="dir-name">北</div>
+      </div>
+      <div class="loshu-cell el-metal">
+        <span class="pos-label">乾宮</span>
+        <div class="fortune-dot good"></div>
+        <div class="star-num">6</div>
+        <div class="star-name">六白武曲</div>
+        <div class="dir-name">西北</div>
+      </div>
+    </div>
+
+    <div class="loshu-info">
+      <h3>洛書口訣</h3>
+      <div class="loshu-poem">
+        戴九履一<br>
+        左三右七<br>
+        二四為肩<br>
+        六八為足<br>
+        五居中央
+        <small>——《易經·繫辭傳》「河出圖，洛出書，聖人則之」</small>
+      </div>
+
+      <h3 style="margin-top:1.5rem;">方位對應</h3>
+      <table style="width:100%;font-size:.9rem;margin-top:.5rem;">
+        <tr><td style="padding:.4rem;font-weight:700;color:var(--red);">坎（北）</td><td>1</td><td style="padding:.4rem;font-weight:700;color:var(--red);">離（南）</td><td>9</td></tr>
+        <tr><td style="padding:.4rem;font-weight:700;color:var(--red);">震（東）</td><td>3</td><td style="padding:.4rem;font-weight:700;color:var(--red);">兌（西）</td><td>7</td></tr>
+        <tr><td style="padding:.4rem;font-weight:700;color:var(--red);">巽（東南）</td><td>4</td><td style="padding:.4rem;font-weight:700;color:var(--red);">乾（西北）</td><td>6</td></tr>
+        <tr><td style="padding:.4rem;font-weight:700;color:var(--red);">坤（西南）</td><td>2</td><td style="padding:.4rem;font-weight:700;color:var(--red);">艮（東北）</td><td>8</td></tr>
+        <tr><td colspan="4" style="padding:.4rem;text-align:center;font-weight:700;color:var(--red);">中宮 → 5</td></tr>
+      </table>
+
+      <h3 style="margin-top:1.5rem;">五行歸屬</h3>
+      <div style="margin-top:.5rem;">
+        <span class="cycle-item" style="color:var(--water);">1 水</span>
+        <span class="cycle-item" style="color:var(--earth);">2 土</span>
+        <span class="cycle-item" style="color:var(--wood);">3 木</span>
+        <span class="cycle-item" style="color:var(--wood);">4 木</span>
+        <span class="cycle-item" style="color:var(--earth);">5 土</span>
+        <span class="cycle-item" style="color:var(--metal);">6 金</span>
+        <span class="cycle-item" style="color:var(--metal);">7 金</span>
+        <span class="cycle-item" style="color:var(--earth);">8 土</span>
+        <span class="cycle-item" style="color:var(--fire);">9 火</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 二、飛行順序 ===== -->
+<div id="sequence">
+  <div class="section-title">
+    <div class="num">貳</div>
+    <div>
+      <h2>九星飛行順序</h2>
+      <div class="en">Flying Star Sequence</div>
+    </div>
+  </div>
+
+  <p style="margin-bottom:1rem;font-size:1.05rem;">
+    九星飛行遵循「洛書軌跡」：由中宮出發，依序飛入西北→西→東北→南→北→西南→東→東南，共九步完成一輪。每年、每月、每日、每時辰都會重新排布。
+  </p>
+
+  <div class="fly-sequence">
+    <div class="fly-step">
+      <div class="fly-num center-fly">5<div class="step-order">1</div></div>
+      <div class="fly-dir">中宮</div>
+    </div>
+    <div class="fly-arrow">→</div>
+    <div class="fly-step">
+      <div class="fly-num">6<div class="step-order">2</div></div>
+      <div class="fly-dir">西北</div>
+    </div>
+    <div class="fly-arrow">→</div>
+    <div class="fly-step">
+      <div class="fly-num">7<div class="step-order">3</div></div>
+      <div class="fly-dir">西</div>
+    </div>
+    <div class="fly-arrow">→</div>
+    <div class="fly-step">
+      <div class="fly-num">8<div class="step-order">4</div></div>
+      <div class="fly-dir">東北</div>
+    </div>
+    <div class="fly-arrow">→</div>
+    <div class="fly-step">
+      <div class="fly-num">9<div class="step-order">5</div></div>
+      <div class="fly-dir">南</div>
+    </div>
+    <div class="fly-arrow">→</div>
+    <div class="fly-step">
+      <div class="fly-num">1<div class="step-order">6</div></div>
+      <div class="fly-dir">北</div>
+    </div>
+    <div class="fly-arrow">→</div>
+    <div class="fly-step">
+      <div class="fly-num">2<div class="step-order">7</div></div>
+      <div class="fly-dir">西南</div>
+    </div>
+    <div class="fly-arrow">→</div>
+    <div class="fly-step">
+      <div class="fly-num">3<div class="step-order">8</div></div>
+      <div class="fly-dir">東</div>
+    </div>
+    <div class="fly-arrow">→</div>
+    <div class="fly-step">
+      <div class="fly-num">4<div class="step-order">9</div></div>
+      <div class="fly-dir">東南</div>
+    </div>
+  </div>
+
+  <div style="background:var(--card);border:2px solid var(--border);border-radius:12px;padding:1.5rem;margin-top:1.5rem;">
+    <h4 style="color:var(--red);margin-bottom:.8rem;">飛行口訣</h4>
+    <div style="font-size:1.1rem;font-weight:700;color:var(--red-dark);line-height:2;">
+      中五飛乾（西北）六<br>
+      兌（西）七艮（東北）八離（南）九<br>
+      坎（北）一坤（西南）二震（東）三<br>
+      巽（東南）四歸中
+    </div>
+    <div style="font-size:.85rem;color:var(--text-light);margin-top:.5rem;">
+      每年九星入中宮的數字不同，依序飛布八方，形成該年的吉凶方位圖。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 三、九星詳解 ===== -->
+<div id="stars">
+  <div class="section-title">
+    <div class="num">參</div>
+    <div>
+      <h2>九星詳解</h2>
+      <div class="en">Detailed Analysis of Nine Stars</div>
+    </div>
+  </div>
+
+  <div class="stars-grid">
+
+    <!-- 一白貪狼 -->
+    <div class="star-card">
+      <div class="star-card-header el-water">
+        <div class="star-icon el-water">1</div>
+        <div class="star-header-info">
+          <h3>一白貪狼星</h3>
+          <div class="alias">天蓬星 · 貪狼星</div>
+          <div class="fortune-badge great-good">吉星</div>
+        </div>
+      </div>
+      <div class="star-card-body">
+        <dl>
+          <dt>五行</dt><dd>水</dd>
+          <dt>方位</dt><dd>北方（坎宮）</dd>
+          <dt>吉凶</dt><dd><b style="color:#2E7D32;">大吉</b> — 主桃花、人緣、事業、智慧</dd>
+          <div class="divider"></div>
+          <dt>旺時</dt><dd>利考試、升遷、異性緣、談判、創作</dd>
+          <dt>衰時</dt><dd>桃花劫、腎臟疾病、耳疾、泌尿問題</dd>
+          <div class="divider"></div>
+          <dt>代表</dt><dd>文昌星君、桃花貴人</dd>
+          <dt>顏色</dt><dd>白色、藍色、黑色</dd>
+          <dt>數字</dt><dd>1、6</dd>
+          <dt>行業</dt><dd>文化、教育、傳媒、演藝</dd>
+          <div class="divider"></div>
+          <dt>化解</dt><dd>放置金屬物品增強水氣</dd>
+        </dl>
+      </div>
+    </div>
+
+    <!-- 二黑巨門 -->
+    <div class="star-card">
+      <div class="star-card-header el-earth">
+        <div class="star-icon el-earth">2</div>
+        <div class="star-header-info">
+          <h3>二黑巨門星</h3>
+          <div class="alias">天芮星 · 病符星</div>
+          <div class="fortune-badge great-bad">大凶</div>
+        </div>
+      </div>
+      <div class="star-card-body">
+        <dl>
+          <dt>五行</dt><dd>土</dd>
+          <dt>方位</dt><dd>西南方（坤宮）</dd>
+          <dt>吉凶</dt><dd><b style="color:#C62828;">大凶</b> — 主疾病、死亡、災禍</dd>
+          <div class="divider"></div>
+          <dt>旺時</dt><dd>極少為旺，通常為凶</dd>
+          <dt>衰時</dt><dd>慢性病、脾胃病、皮膚病、癌症、精神疾病</dd>
+          <div class="divider"></div>
+          <dt>代表</dt><dd>病符星、死門</dd>
+          <dt>顏色</dt><dd>黃色、棕色（忌用）</dd>
+          <dt>數字</dt><dd>2、5、8</dd>
+          <dt>化解</dt><dd><b>銅葫蘆、六帝錢、金屬風鈴</b>（金洩土氣）</dd>
+        </dl>
+      </div>
+    </div>
+
+    <!-- 三碧祿存 -->
+    <div class="star-card">
+      <div class="star-card-header el-wood">
+        <div class="star-icon el-wood">3</div>
+        <div class="star-header-info">
+          <h3>三碧祿存星</h3>
+          <div class="alias">天衝星 · 蚩尤星</div>
+          <div class="fortune-badge bad">凶星</div>
+        </div>
+      </div>
+      <div class="star-card-body">
+        <dl>
+          <dt>五行</dt><dd>木</dd>
+          <dt>方位</dt><dd>東方（震宮）</dd>
+          <dt>吉凶</dt><dd><b style="color:#BF360C;">凶</b> — 主口舌、官訟、是非、爭鬥</dd>
+          <div class="divider"></div>
+          <dt>旺時</dt><dd>利軍警、運動員、律師、競爭性行業</dd>
+          <dt>衰時</dt><dd>口舌爭執、官司訴訟、手腳受傷、盜賊</dd>
+          <div class="divider"></div>
+          <dt>代表</dt><dd>蚩尤、好鬥之神</dd>
+          <dt>顏色</dt><dd>綠色</dd>
+          <dt>數字</dt><dd>3、4</dd>
+          <dt>化解</dt><dd><b>紅色物品、紫水晶</b>（火洩木氣）</dd>
+        </dl>
+      </div>
+    </div>
+
+    <!-- 四綠文曲 -->
+    <div class="star-card">
+      <div class="star-card-header el-wood">
+        <div class="star-icon el-wood">4</div>
+        <div class="star-header-info">
+          <h3>四綠文曲星</h3>
+          <div class="alias">天輔星 · 文曲星</div>
+          <div class="fortune-badge good">吉星</div>
+        </div>
+      </div>
+      <div class="star-card-body">
+        <dl>
+          <dt>五行</dt><dd>木</dd>
+          <dt>方位</dt><dd>東南方（巽宮）</dd>
+          <dt>吉凶</dt><dd><b style="color:#2E7D32;">吉</b> — 主學業、功名、文昌、桃花</dd>
+          <div class="divider"></div>
+          <dt>旺時</dt><dd>考試順利、升學、文學創作、藝術成就</dd>
+          <dt>衰時</dt><dd>桃花劫、風流韻事、肝膽疾病、神經衰弱</dd>
+          <div class="divider"></div>
+          <dt>代表</dt><dd>文昌帝君</dd>
+          <dt>顏色</dt><dd>綠色、青色</dd>
+          <dt>數字</dt><dd>3、4</dd>
+          <dt>行業</dt><dd>教育、文學、藝術、設計</dd>
+        </dl>
+      </div>
+    </div>
+
+    <!-- 五黃廉貞 -->
+    <div class="star-card">
+      <div class="star-card-header el-earth">
+        <div class="star-icon el-earth" style="border-color:#C62828;color:#C62828;">5</div>
+        <div class="star-header-info">
+          <h3>五黃廉貞星</h3>
+          <div class="alias">天禽星 · 五鬼星 · 正關煞</div>
+          <div class="fortune-badge great-bad">大凶</div>
+        </div>
+      </div>
+      <div class="star-card-body">
+        <dl>
+          <dt>五行</dt><dd>土</dd>
+          <dt>方位</dt><dd>中央（中宮）</dd>
+          <dt>吉凶</dt><dd><b style="color:#C62828;">最凶之星</b> — 主災禍、死亡、意外、血光</dd>
+          <div class="divider"></div>
+          <dt>旺時</dt><dd>幾乎不旺，永遠為凶</dd>
+          <dt>衰時</dt><dd>重大災禍、絕症、血光、破財、家破人亡</dd>
+          <div class="divider"></div>
+          <dt>代表</dt><dd>五鬼、正關煞、廉貞</dd>
+          <dt>顏色</dt><dd>黃色（大忌）</dd>
+          <dt>數字</dt><dd>5、10</dd>
+          <dt>化解</dt><dd><b>銅器、金屬物品、六帝錢</b>（切忌動土、裝修）</dd>
+        </dl>
+      </div>
+    </div>
+
+    <!-- 六白武曲 -->
+    <div class="star-card">
+      <div class="star-card-header el-metal">
+        <div class="star-icon el-metal">6</div>
+        <div class="star-header-info">
+          <h3>六白武曲星</h3>
+          <div class="alias">天心星 · 武曲星</div>
+          <div class="fortune-badge good">吉星</div>
+        </div>
+      </div>
+      <div class="star-card-body">
+        <dl>
+          <dt>五行</dt><dd>金</dd>
+          <dt>方位</dt><dd>西北方（乾宮）</dd>
+          <dt>吉凶</dt><dd><b style="color:#2E7D32;">吉</b> — 主權勢、武職、偏財、貴人</dd>
+          <div class="divider"></div>
+          <dt>旺時</dt><dd>升官發財、軍警得勢、偏財運、貴人相助</dd>
+          <dt>衰時</dt><dd>官非、頭部疾病、意外血光、孤獨</dd>
+          <div class="divider"></div>
+          <dt>代表</dt><dd>武財神</dd>
+          <dt>顏色</dt><dd>白色、銀色、金色</dd>
+          <dt>數字</dt><dd>6、7</dd>
+          <dt>行業</dt><dd>軍警、金融、金屬業、權威機構</dd>
+        </dl>
+      </div>
+    </div>
+
+    <!-- 七赤破軍 -->
+    <div class="star-card">
+      <div class="star-card-header el-metal">
+        <div class="star-icon el-metal">7</div>
+        <div class="star-header-info">
+          <h3>七赤破軍星</h3>
+          <div class="alias">天柱星 · 破軍星</div>
+          <div class="fortune-badge bad">凶星</div>
+        </div>
+      </div>
+      <div class="star-card-body">
+        <dl>
+          <dt>五行</dt><dd>金</dd>
+          <dt>方位</dt><dd>西方（兌宮）</dd>
+          <dt>吉凶</dt><dd><b style="color:#BF360C;">凶</b> — 主盜賊、口舌、火災、背叛</dd>
+          <div class="divider"></div>
+          <dt>旺時</dt><dd>利口才、演說、娛樂業、歌唱表演</dd>
+          <dt>衰時</dt><dd>遭竊、火災、口舌是非、呼吸道疾病、肺病</dd>
+          <div class="divider"></div>
+          <dt>代表</dt><dd>賊星</dd>
+          <dt>顏色</dt><dd>白色、金色</dd>
+          <dt>數字</dt><dd>7、6</dd>
+          <dt>化解</dt><dd><b>水養植物、藍色物品</b>（水洩金氣）</dd>
+        </dl>
+      </div>
+    </div>
+
+    <!-- 八白左輔 -->
+    <div class="star-card">
+      <div class="star-card-header el-earth">
+        <div class="star-icon el-earth" style="border-color:#4CAF50;color:#4CAF50;">8</div>
+        <div class="star-header-info">
+          <h3>八白左輔星</h3>
+          <div class="alias">天任星 · 左輔星</div>
+          <div class="fortune-badge great-good">大吉（當運）</div>
+        </div>
+      </div>
+      <div class="star-card-body">
+        <dl>
+          <dt>五行</dt><dd>土</dd>
+          <dt>方位</dt><dd>東北方（艮宮）</dd>
+          <dt>吉凶</dt><dd><b style="color:#2E7D32;">大吉</b> — 主正財、置業、富貴、添丁</dd>
+          <div class="divider"></div>
+          <dt>旺時</dt><dd>正財運旺、置產、添丁、升職、創業成功</dd>
+          <dt>衰時</dt><dd>脾胃疾病、筋骨酸痛、鼻炎</dd>
+          <div class="divider"></div>
+          <dt>代表</dt><dd>財星（2004-2023 當運）</dd>
+          <dt>顏色</dt><dd>紅色、紫色、黃色</dd>
+          <dt>數字</dt><dd>8、5、2</dd>
+          <dt>行業</dt><dd>房地產、建築、礦業、農業</dd>
+        </dl>
+      </div>
+    </div>
+
+    <!-- 九紫右弼 -->
+    <div class="star-card">
+      <div class="star-card-header el-fire">
+        <div class="star-icon el-fire">9</div>
+        <div class="star-header-info">
+          <h3>九紫右弼星</h3>
+          <div class="alias">天英星 · 右弼星</div>
+          <div class="fortune-badge great-good">大吉（現行當運）</div>
+        </div>
+      </div>
+      <div class="star-card-body">
+        <dl>
+          <dt>五行</dt><dd>火</dd>
+          <dt>方位</dt><dd>南方（離宮）</dd>
+          <dt>吉凶</dt><dd><b style="color:#2E7D32;">大吉</b> — 主喜慶、姻緣、添丁、名聲</dd>
+          <div class="divider"></div>
+          <dt>旺時</dt><dd>結婚、添丁、升遷、中獎、成名</dd>
+          <dt>衰時</dt><dd>眼疾、心臟病、血光之災、火災</dd>
+          <div class="divider"></div>
+          <dt>代表</dt><dd>喜慶星、姻緣星（2024-2043 當運）</dd>
+          <dt>顏色</dt><dd>紅色、紫色、綠色</dd>
+          <dt>數字</dt><dd>9、3、4</dd>
+          <dt>行業</dt><dd>能源、科技、文化、心靈產業</dd>
+        </dl>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== 四、五行相生相剋 ===== -->
+<div id="wuxing">
+  <div class="section-title">
+    <div class="num">肆</div>
+    <div>
+      <h2>五行相生相剋</h2>
+      <div class="en">Five Elements: Generating & Overcoming Cycles</div>
+    </div>
+  </div>
+
+  <div class="wuxing-section">
+    <div class="wuxing-diagram">
+      <svg class="wuxing-svg" viewBox="0 0 350 350">
+        <defs>
+          <marker id="arrowG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#4CAF50"/>
+          </marker>
+          <marker id="arrowR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#F44336"/>
+          </marker>
+        </defs>
+        <!-- 相生（綠色順時針） -->
+        <path d="M130,50 C200,20 280,80 280,130" stroke="#4CAF50" stroke-width="3" fill="none" marker-end="url(#arrowG)" opacity=".7"/>
+        <path d="M290,160 C310,230 260,290 210,300" stroke="#4CAF50" stroke-width="3" fill="none" marker-end="url(#arrowG)" opacity=".7"/>
+        <path d="M180,310 C120,330 60,290 50,230" stroke="#4CAF50" stroke-width="3" fill="none" marker-end="url(#arrowG)" opacity=".7"/>
+        <path d="M40,200 C20,140 60,70 120,50" stroke="#4CAF50" stroke-width="3" fill="none" marker-end="url(#arrowG)" opacity=".7"/>
+        <!-- 相剋（紅色五角星） -->
+        <path d="M140,65 C180,150 200,250 190,300" stroke="#F44336" stroke-width="2" fill="none" stroke-dasharray="6,4" marker-end="url(#arrowR)" opacity=".6"/>
+        <path d="M170,305 C100,250 50,170 60,100" stroke="#F44336" stroke-width="2" fill="none" stroke-dasharray="6,4" marker-end="url(#arrowR)" opacity=".6"/>
+        <path d="M80,80 C140,60 250,80 280,140" stroke="#F44336" stroke-width="2" fill="none" stroke-dasharray="6,4" marker-end="url(#arrowR)" opacity=".6"/>
+        <path d="M275,170 C240,240 180,290 120,300" stroke="#F44336" stroke-width="2" fill="none" stroke-dasharray="6,4" marker-end="url(#arrowR)" opacity=".6"/>
+        <path d="M190,290 C230,200 250,100 200,50" stroke="#F44336" stroke-width="2" fill="none" stroke-dasharray="6,4" marker-end="url(#arrowR)" opacity=".6"/>
+      </svg>
+      <div class="wuxing-node node-wood">木<div class="el-sub">東·春</div></div>
+      <div class="wuxing-node node-fire">火<div class="el-sub">南·夏</div></div>
+      <div class="wuxing-node node-earth">土<div class="el-sub">中·長夏</div></div>
+      <div class="wuxing-node node-metal">金<div class="el-sub">西·秋</div></div>
+      <div class="wuxing-node node-water">水<div class="el-sub">北·冬</div></div>
+    </div>
+
+    <div class="wuxing-cycles">
+      <div class="cycle-card">
+        <h4><span class="dot green"></span>相生（促進、滋養）</h4>
+        <div class="cycle-items">
+          <span class="cycle-item">木 生 火</span>
+          <span class="cycle-item">火 生 土</span>
+          <span class="cycle-item">土 生 金</span>
+          <span class="cycle-item">金 生 水</span>
+          <span class="cycle-item">水 生 木</span>
+        </div>
+        <div style="font-size:.85rem;color:var(--text-light);margin-top:.8rem;">
+          相生代表促進、幫助的關係。例如「水生木」意為水滋養木的成長。
+        </div>
+      </div>
+      <div class="cycle-card">
+        <h4><span class="dot red"></span>相剋（抑制、制約）</h4>
+        <div class="cycle-items">
+          <span class="cycle-item">木 剋 土</span>
+          <span class="cycle-item">土 剋 水</span>
+          <span class="cycle-item">水 剋 火</span>
+          <span class="cycle-item">火 剋 金</span>
+          <span class="cycle-item">金 剋 木</span>
+        </div>
+        <div style="font-size:.85rem;color:var(--text-light);margin-top:.8rem;">
+          相剋代表抑制、制約的關係。風水化煞常用「洩」與「剋」兩種方法。
+        </div>
+      </div>
+      <div class="cycle-card">
+        <h4>風水化煞原則</h4>
+        <div style="font-size:.9rem;line-height:2;">
+          <b>凶星屬土（2、5）</b>→ 用<b style="color:var(--metal);">金</b>洩之（銅器、金屬）<br>
+          <b>凶星屬木（3）</b>→ 用<b style="color:var(--fire);">火</b>洩之（紅色、燈光）<br>
+          <b>凶星屬金（7）</b>→ 用<b style="color:var(--water);">水</b>洩之（水養植物、藍色）<br>
+          <b>凶星屬火（9衰）</b>→ 用<b style="color:var(--earth);">土</b>洩之（陶瓷、黃色）
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 五、三元九運 ===== -->
+<div id="era">
+  <div class="section-title">
+    <div class="num">伍</div>
+    <div>
+      <h2>三元九運</h2>
+      <div class="en">Three Eras, Nine Periods · 180-Year Cycle</div>
+    </div>
+  </div>
+
+  <p style="margin-bottom:1.5rem;font-size:1.05rem;">
+    三元九運是飛星派的時間劃分系統，以180年為一大週期，分為上、中、下三元，每元60年，每元又分三運，每運20年。每運由一顆星當令主事，影響該時期的氣運走向。
+  </p>
+
+  <table class="era-table">
+    <thead>
+      <tr>
+        <th>元</th>
+        <th>運</th>
+        <th>年份</th>
+        <th>當運星</th>
+        <th>五行</th>
+        <th>旺氣</th>
+        <th>狀態</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td rowspan="3"><b>上元</b></td><td>一運</td><td>1864-1883</td><td>一白貪狼</td><td>水</td><td>水旺</td><td><span class="era-badge past">已過</span></td></tr>
+      <tr><td>二運</td><td>1884-1903</td><td>二黑巨門</td><td>土</td><td>土旺</td><td><span class="era-badge past">已過</span></td></tr>
+      <tr><td>三運</td><td>1904-1923</td><td>三碧祿存</td><td>木</td><td>木旺</td><td><span class="era-badge past">已過</span></td></tr>
+      <tr><td rowspan="3"><b>中元</b></td><td>四運</td><td>1924-1943</td><td>四綠文曲</td><td>木</td><td>木旺</td><td><span class="era-badge past">已過</span></td></tr>
+      <tr><td>五運</td><td>1944-1963</td><td>五黃廉貞</td><td>土</td><td>土旺</td><td><span class="era-badge past">已過</span></td></tr>
+      <tr><td>六運</td><td>1964-1983</td><td>六白武曲</td><td>金</td><td>金旺</td><td><span class="era-badge past">已過</span></td></tr>
+      <tr><td rowspan="3"><b>下元</b></td><td>七運</td><td>1984-2003</td><td>七赤破軍</td><td>金</td><td>金旺</td><td><span class="era-badge past">已過</span></td></tr>
+      <tr><td>八運</td><td>2004-2023</td><td>八白左輔</td><td>土</td><td>土旺、房地產興盛</td><td><span class="era-badge past">已過</span></td></tr>
+      <tr class="current-era"><td><b>九運</b></td><td><b>2024-2043</b></td><td><b>九紫右弼</b></td><td><b>火</b></td><td><b>火旺、科技文化興盛</b></td><td><span class="era-badge now">現行當運</span></td></tr>
+    </tbody>
+  </table>
+
+  <div style="background:#E8F5E9;padding:1.5rem;border-radius:12px;border-left:6px solid #4CAF50;margin-top:2rem;">
+    <h4 style="color:#2E7D32;margin-bottom:.5rem;">九紫運（2024-2043）趨勢分析</h4>
+    <div style="font-size:.95rem;line-height:2;">
+      <b>旺氣屬火</b>：能源、科技、文化、心靈產業將蓬勃發展<br>
+      <b>代表顏色</b>：紅色、紫色為旺色<br>
+      <b>旺方</b>：南方（離宮）、東方（震宮）、東南方（巽宮）<br>
+      <b>衰方</b>：北方（坎宮）、西南方（坤宮）<br>
+      <b>關鍵詞</b>：光電能源、人工智慧、心靈覺醒、文化復興
+    </div>
+  </div>
+</div>
+
+<!-- ===== 六、解讀指南 ===== -->
+<div id="guide">
+  <div class="section-title">
+    <div class="num">陸</div>
+    <div>
+      <h2>黃曆九星解讀指南</h2>
+      <div class="en">How to Read Nine Stars in Almanac</div>
+    </div>
+  </div>
+
+  <p style="margin-bottom:1.5rem;font-size:1.05rem;">
+    黃曆顯示的九宮飛星是一個9位數字，例如 <code style="background:#E8F5E9;padding:.3rem .8rem;border-radius:6px;font-size:1.2rem;font-weight:700;">846792351</code>，每個數字對應一個宮位。
+  </p>
+
+  <div class="guide-grid">
+    <div class="guide-card">
+      <div class="guide-num">1</div>
+      <h4>看中宮（第1位數字）</h4>
+      <p>中宮是該日氣場的核心。第1位數字代表中宮飛入的星，主導當天整體吉凶趨勢。</p>
+    </div>
+    <div class="guide-card">
+      <div class="guide-num">2</div>
+      <h4>找吉星方位</h4>
+      <p>吉星（1、4、6、8、9）所在的方位，適合辦重要事情。例如8在東北方，該方利求財。</p>
+    </div>
+    <div class="guide-card">
+      <div class="guide-num">3</div>
+      <h4>避凶星方位</h4>
+      <p>凶星（2、3、5、7）所在的方位宜避忌。例如5在東方，該方忌動土、裝修。</p>
+    </div>
+    <div class="guide-card">
+      <div class="guide-num">4</div>
+      <h4>配合五行化煞</h4>
+      <p>凶星方位可用五行相剋化解。土星用金器、木星用紅色、金星用水植。</p>
+    </div>
+  </div>
+
+  <div style="background:var(--card);border:2px solid var(--border);border-radius:16px;padding:2rem;margin-top:2rem;box-shadow:var(--shadow);">
+    <h4 style="color:var(--red);margin-bottom:1rem;font-size:1.2rem;">範例解讀：846792351</h4>
+    <table style="width:100%;border-collapse:collapse;">
+      <thead>
+        <tr>
+          <th style="background:var(--red);color:#fff;padding:.6rem;border-radius:6px 0 0 0;">位置</th>
+          <th style="background:var(--red);color:#fff;padding:.6rem;">數字</th>
+          <th style="background:var(--red);color:#fff;padding:.6rem;">星名</th>
+          <th style="background:var(--red);color:#fff;padding:.6rem;">五行</th>
+          <th style="background:var(--red);color:#fff;padding:.6rem;border-radius:0 6px 0 0;">吉凶</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style="padding:.5rem;border-bottom:1px solid var(--border);font-weight:700;">中宮</td><td style="padding:.5rem;border-bottom:1px solid var(--border);"><b>8</b></td><td style="padding:.5rem;border-bottom:1px solid var(--border);">八白左輔</td><td style="padding:.5rem;border-bottom:1px solid var(--border);">土</td><td style="padding:.5rem;border-bottom:1px solid var(--border);color:#2E7D32;font-weight:700;">大吉（財星）</td></tr>
+        <tr><td style="padding:.5rem;border-bottom:1px solid var(--border);font-weight:700;">西北</td><td style="padding:.5rem;border-bottom:1px solid var(--border);"><b>4</b></td><td style="padding:.5rem;border-bottom:1px solid var(--border);">四綠文曲</td><td style="padding:.5rem;border-bottom:1px solid var(--border);">木</td><td style="padding:.5rem;border-bottom:1px solid var(--border);color:#2E7D32;">吉（文昌）</td></tr>
+        <tr><td style="padding:.5rem;border-bottom:1px solid var(--border);font-weight:700;">西</td><td style="padding:.5rem;border-bottom:1px solid var(--border);"><b>6</b></td><td style="padding:.5rem;border-bottom:1px solid var(--border);">六白武曲</td><td style="padding:.5rem;border-bottom:1px solid var(--border);">金</td><td style="padding:.5rem;border-bottom:1px solid var(--border);color:#2E7D32;">吉（權勢）</td></tr>
+        <tr><td style="padding:.5rem;border-bottom:1px solid var(--border);font-weight:700;">東北</td><td style="padding:.5rem;border-bottom:1px solid var(--border);"><b>7</b></td><td style="padding:.5rem;border-bottom:1px solid var(--border);">七赤破軍</td><td style="padding:.5rem;border-bottom:1px solid var(--border);">金</td><td style="padding:.5rem;border-bottom:1px solid var(--border);color:#BF360C;">凶（盜賊）</td></tr>
+        <tr><td style="padding:.5rem;border-bottom:1px solid var(--border);font-weight:700;">南</td><td style="padding:.5rem;border-bottom:1px solid var(--border);"><b>9</b></td><td style="padding:.5rem;border-bottom:1px solid var(--border);">九紫右弼</td><td style="padding:.5rem;border-bottom:1px solid var(--border);">火</td><td style="padding:.5rem;border-bottom:1px solid var(--border);color:#2E7D32;font-weight:700;">大吉（喜慶）</td></tr>
+        <tr><td style="padding:.5rem;border-bottom:1px solid var(--border);font-weight:700;">北</td><td style="padding:.5rem;border-bottom:1px solid var(--border);"><b>2</b></td><td style="padding:.5rem;border-bottom:1px solid var(--border);">二黑巨門</td><td style="padding:.5rem;border-bottom:1px solid var(--border);">土</td><td style="padding:.5rem;border-bottom:1px solid var(--border);color:#C62828;font-weight:700;">大凶（病符）</td></tr>
+        <tr><td style="padding:.5rem;border-bottom:1px solid var(--border);font-weight:700;">西南</td><td style="padding:.5rem;border-bottom:1px solid var(--border);"><b>3</b></td><td style="padding:.5rem;border-bottom:1px solid var(--border);">三碧祿存</td><td style="padding:.5rem;border-bottom:1px solid var(--border);">木</td><td style="padding:.5rem;border-bottom:1px solid var(--border);color:#BF360C;">凶（是非）</td></tr>
+        <tr><td style="padding:.5rem;border-bottom:1px solid var(--border);font-weight:700;">東</td><td style="padding:.5rem;border-bottom:1px solid var(--border);"><b>5</b></td><td style="padding:.5rem;border-bottom:1px solid var(--border);">五黃廉貞</td><td style="padding:.5rem;border-bottom:1px solid var(--border);">土</td><td style="padding:.5rem;border-bottom:1px solid var(--border);color:#C62828;font-weight:700;">大凶（災禍）</td></tr>
+        <tr><td style="padding:.5rem;font-weight:700;">東南</td><td style="padding:.5rem;"><b>1</b></td><td style="padding:.5rem;">一白貪狼</td><td style="padding:.5rem;">水</td><td style="padding:.5rem;color:#2E7D32;">吉（桃花）</td></tr>
+      </tbody>
+    </table>
+
+    <div style="margin-top:1.5rem;padding:1rem;background:#FFF8E1;border-radius:8px;border:1px solid var(--gold);">
+      <h4 style="color:var(--red-dark);margin-bottom:.5rem;">此日建議</h4>
+      <div style="font-size:.9rem;line-height:2;">
+        ✅ <b>中宮（八白財星）</b>：整體財運旺盛，適合處理財務事務<br>
+        ✅ <b>南方（九紫喜星）</b>：適合辦喜事、約會、社交活動<br>
+        ✅ <b>西北（四綠文昌）</b>：適合讀書、考試、簽約<br>
+        ⚠️ <b>北方（二黑病符）</b>：此方忌久留，宜放置銅器化解<br>
+        ⚠️ <b>東方（五黃災星）</b>：此方大忌動土，宜靜不宜動<br>
+        ⚠️ <b>東北（七赤賊星）</b>：注意防盜，避免此方放置貴重物品
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<div class="footer">
+  九宮飛星詳解 © 2026 | 黃曆通勝附屬資料<br>
+  <span style="font-size:.75rem;opacity:.7;">資料來源：傳統風水學、飛星派經典</span>
+</div>
+
+<script>
+// Smooth scroll for nav links
+document.querySelectorAll('.nav-btn[href^="#"]').forEach(btn => {
+  btn.addEventListener('click', function(e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+// Highlight active section on scroll
+const sections = document.querySelectorAll('[id]');
+const navBtns = document.querySelectorAll('.nav-btn[href^="#"]');
+
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(section => {
+    const sectionTop = section.offsetTop - 100;
+    if (pageYOffset >= sectionTop) {
+      current = section.getAttribute('id');
+    }
+  });
+  navBtns.forEach(btn => {
+    btn.classList.remove('active');
+    if (btn.getAttribute('href') === '#' + current) {
+      btn.classList.add('active');
+    }
+  });
+});
+</script>
+</body>
+</html>

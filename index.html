@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>黃曆通勝</title>
+<style>
+  :root {
+    --red: #c0392b;
+    --dark-red: #922b21;
+    --gold: #d4a017;
+    --dark-gold: #b8860b;
+    --bg: #fdf6ec;
+    --card-bg: #fffbf2;
+    --text: #2c1810;
+    --text-light: #8b6914;
+    --border: #e8d5b0;
+    --green: #27ae60;
+    --shadow: 0 2px 12px rgba(0,0,0,.08);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: "Noto Serif TC", "新細明體", serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, var(--dark-red) 0%, var(--red) 100%);
+    color: #fff;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0,0,0,.15);
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -8px; left: 0; right: 0;
+    height: 8px;
+    background: linear-gradient(135deg, var(--dark-gold) 0%, var(--gold) 100%);
+  }
+  .header h1 {
+    font-size: 2rem;
+    letter-spacing: .5rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,.3);
+    margin-bottom: .3rem;
+  }
+  .header .sub { font-size: .9rem; opacity: .85; letter-spacing: .2rem; }
+
+  /* Date Picker */
+  .date-bar {
+    background: #fff;
+    border-bottom: 2px solid var(--border);
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .8rem;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow);
+  }
+  .date-bar label { font-weight: 700; color: var(--red); }
+  .date-bar input[type="date"] {
+    font-size: 1rem;
+    padding: .5rem 1rem;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color .2s;
+  }
+  .date-bar input:focus { border-color: var(--red); outline: none; }
+  .date-bar button {
+    padding: .5rem 1.2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .btn-today {
+    background: var(--red);
+    color: #fff;
+  }
+  .btn-today:hover { background: var(--dark-red); }
+  .btn-nav {
+    background: #fff;
+    border: 2px solid var(--border) !important;
+    color: var(--text);
+    font-size: 1.2rem !important;
+    padding: .5rem .8rem !important;
+  }
+  .btn-nav:hover { background: var(--bg); border-color: var(--red) !important; }
+
+  /* Main Container */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem;
+  }
+
+  /* Top Banner - Date Info */
+  .date-banner {
+    background: linear-gradient(135deg, var(--red) 0%, #a93226 100%);
+    color: #fff;
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 20px rgba(192,57,43,.25);
+    position: relative;
+    overflow: hidden;
+  }
+  .date-banner::before {
+    content: '黃';
+    position: absolute;
+    right: -20px; top: -30px;
+    font-size: 12rem;
+    opacity: .06;
+    font-weight: 900;
+  }
+  .date-banner .ganzhi-year {
+    font-size: 1.1rem;
+    letter-spacing: .3rem;
+    opacity: .9;
+    margin-bottom: .5rem;
+  }
+  .date-banner .lunar-date {
+    font-size: 2.8rem;
+    font-weight: 900;
+    letter-spacing: .3rem;
+    text-shadow: 2px 2px 6px rgba(0,0,0,.2);
+    margin-bottom: .3rem;
+  }
+  .date-banner .gregorian {
+    font-size: 1rem;
+    opacity: .8;
+    margin-bottom: .8rem;
+  }
+  .date-banner .tags {
+    display: flex;
+    justify-content: center;
+    gap: .5rem;
+    flex-wrap: wrap;
+  }
+  .date-banner .tag {
+    background: rgba(255,255,255,.2);
+    padding: .3rem .8rem;
+    border-radius: 20px;
+    font-size: .85rem;
+    backdrop-filter: blur(4px);
+  }
+
+  /* Grid Layout */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+  }
+  .grid .full { grid-column: 1 / -1; }
+
+  /* Card */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.2rem;
+    box-shadow: var(--shadow);
+    transition: transform .2s, box-shadow .2s;
+  }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,.1); }
+  .card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--red);
+    border-bottom: 2px solid var(--border);
+    padding-bottom: .5rem;
+    margin-bottom: .8rem;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+  .card-title .icon { font-size: 1.2rem; }
+
+  /* Ganzhi Card */
+  .ganzhi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: .8rem;
+    text-align: center;
+  }
+  .ganzhi-item {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: .8rem .5rem;
+  }
+  .ganzhi-item .label {
+    font-size: .75rem;
+    color: var(--text-light);
+    margin-bottom: .3rem;
+  }
+  .ganzhi-item .value {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--red);
+  }
+  .ganzhi-item .sub {
+    font-size: .75rem;
+    color: var(--text-light);
+    margin-top: .2rem;
+  }
+
+  /* Yi Ji (宜忌) */
+  .yiji-section { margin-bottom: 1rem; }
+  .yiji-section:last-child { margin-bottom: 0; }
+  .yiji-label {
+    display: inline-block;
+    padding: .2rem .8rem;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: .9rem;
+    margin-bottom: .5rem;
+  }
+  .yiji-label.yi { background: #e8f5e9; color: #2e7d32; }
+  .yiji-label.ji { background: #ffebee; color: #c62828; }
+  .yiji-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+  }
+  .yiji-tag {
+    background: #fff;
+    border: 1px solid var(--border);
+    padding: .25rem .6rem;
+    border-radius: 6px;
+    font-size: .85rem;
+    transition: all .2s;
+  }
+  .yiji-tag.yi { border-color: #a5d6a7; color: #2e7d32; }
+  .yiji-tag.ji { border-color: #ef9a9a; color: #c62828; }
+  .yiji-tag.yi:hover { background: #e8f5e9; }
+  .yiji-tag.ji:hover { background: #ffebee; }
+
+  /* Hours */
+  .hours-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: .5rem;
+  }
+  .hour-item {
+    text-align: center;
+    padding: .5rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: #fff;
+  }
+  .hour-item.good { border-color: #a5d6a7; background: #f1f8e9; }
+  .hour-item.bad { border-color: #ef9a9a; background: #fce4ec; }
+  .hour-item .time { font-weight: 700; font-size: 1rem; }
+  .hour-item .gz { font-size: .75rem; color: var(--text-light); }
+  .hour-item .status { font-size: .7rem; font-weight: 700; margin-top: .2rem; }
+  .hour-item.good .status { color: #2e7d32; }
+  .hour-item.bad .status { color: #c62828; }
+
+  /* Solar Term */
+  .solar-term-display {
+    text-align: center;
+    padding: 1rem;
+  }
+  .solar-term-display .term-name {
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--gold);
+    text-shadow: 1px 1px 3px rgba(0,0,0,.1);
+  }
+  .solar-term-display .term-range {
+    font-size: .85rem;
+    color: var(--text-light);
+    margin-top: .3rem;
+  }
+  .solar-term-display .next-term {
+    font-size: .8rem;
+    color: var(--text-light);
+    margin-top: .5rem;
+    padding-top: .5rem;
+    border-top: 1px dashed var(--border);
+  }
+
+  /* Direction */
+  .direction-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: .5rem;
+  }
+  .direction-item {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .5rem;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .direction-item .dir-label {
+    font-weight: 700;
+    color: var(--red);
+    min-width: 2.5rem;
+  }
+  .direction-item .dir-value { font-size: .9rem; }
+
+  /* Peng Taboo */
+  .peng-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--text);
+    text-align: center;
+    padding: .5rem;
+  }
+
+  /* Deity */
+  .deity-list {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+  }
+  .deity-item {
+    background: linear-gradient(135deg, #fff9e6 0%, #fff 100%);
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    padding: .6rem 1rem;
+    font-weight: 700;
+    color: var(--dark-gold);
+    text-align: center;
+  }
+  .deity-detail {
+    display: none;
+  }
+  .deity-detail.show {
+    display: block;
+  }
+  .deity-detail b {
+    color: var(--red);
+  }
+
+  /* Star 28 */
+  .star-display {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--dark-red);
+    padding: .5rem;
+  }
+
+  /* Officer */
+  .officer-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    padding: .5rem;
+  }
+  .officer-main {
+    text-align: center;
+  }
+  .officer-main .name {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--red);
+  }
+  .officer-main .god {
+    font-size: .9rem;
+    color: var(--text-light);
+  }
+  .officer-badge {
+    padding: .3rem .8rem;
+    border-radius: 20px;
+    font-size: .85rem;
+    font-weight: 700;
+  }
+  .officer-badge.yellow { background: #fff8e1; color: var(--dark-gold); border: 1px solid var(--gold); }
+  .officer-badge.black { background: #efebe9; color: #5d4037; border: 1px solid #bcaaa4; }
+
+  /* Nine Star */
+  .ninestar-display {
+    display: flex;
+    justify-content: center;
+    gap: .3rem;
+    flex-wrap: wrap;
+  }
+  .ninestar-cell {
+    width: 2.5rem; height: 2.5rem;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    font-weight: 900;
+    font-size: 1.1rem;
+    background: #fff;
+  }
+  .ninestar-cell.center { border-color: var(--red); color: var(--red); background: #fff5f5; }
+
+  /* Five Elements */
+  .elements-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    justify-content: center;
+  }
+  .element-chip {
+    padding: .3rem .8rem;
+    border-radius: 20px;
+    font-size: .85rem;
+    background: #fff;
+    border: 1px solid var(--border);
+  }
+
+  /* Gods */
+  .gods-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: .5rem;
+  }
+  .gods-section .god-tag {
+    display: inline-block;
+    padding: .2rem .5rem;
+    margin: .15rem;
+    border-radius: 4px;
+    font-size: .8rem;
+  }
+  .god-tag.good { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+  .god-tag.bad { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
+
+  /* Level */
+  .level-display {
+    text-align: center;
+    padding: .5rem;
+  }
+  .level-stars {
+    font-size: 1.5rem;
+    margin-bottom: .3rem;
+  }
+  .level-desc {
+    font-size: .9rem;
+    color: var(--text-light);
+    line-height: 1.6;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: var(--text-light);
+    font-size: .8rem;
+    border-top: 1px solid var(--border);
+    margin-top: 2rem;
+  }
+
+  /* Loading */
+  .loading {
+    text-align: center;
+    padding: 4rem 1rem;
+    color: var(--text-light);
+  }
+  .loading .spinner {
+    width: 40px; height: 40px;
+    border: 4px solid var(--border);
+    border-top-color: var(--red);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .grid { grid-template-columns: 1fr; }
+    .header h1 { font-size: 1.5rem; letter-spacing: .3rem; }
+    .date-banner .lunar-date { font-size: 2rem; }
+    .ganzhi-grid { grid-template-columns: repeat(3, 1fr); }
+    .hours-grid { grid-template-columns: repeat(4, 1fr); }
+    .direction-grid { grid-template-columns: 1fr; }
+    .gods-grid { grid-template-columns: 1fr; }
+    .date-bar { gap: .5rem; }
+    .date-bar input[type="date"] { width: 100%; }
+  }
+  @media (max-width: 480px) {
+    .container { padding: 1rem .5rem; }
+    .date-banner { padding: 1.5rem 1rem; }
+    .date-banner .lunar-date { font-size: 1.6rem; }
+    .card { padding: 1rem; }
+    .hours-grid { grid-template-columns: repeat(3, 1fr); }
+    .ninestar-cell { width: 2rem; height: 2rem; font-size: .9rem; }
+    .officer-main .name { font-size: 1.6rem; }
+  }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="header">
+  <h1>黃 曆 通 勝</h1>
+  <div class="sub">每日宜忌‧吉凶方位‧節氣神明</div>
+</div>
+
+<div class="date-bar">
+  <button class="btn-nav" onclick="changeDate(-1)" title="前一天">◀</button>
+  <label for="dateInput">選擇日期：</label>
+  <input type="date" id="dateInput" onchange="onDateChange()">
+  <button class="btn-nav" onclick="changeDate(1)" title="後一天">▶</button>
+  <button class="btn-today" onclick="goToday()">今 日</button>
+</div>
+
+<div class="container" id="app">
+  <div class="loading"><div class="spinner"></div>載入中...</div>
+</div>
+
+<div class="footer">
+  黃曆通勝 © 2026 | 資料僅供參考 | 農曆資料庫 1970-2100
+</div>
+
+<script>
+window.LunarData = {};
+const BASE_PATH = './';
+let currentDate = null;
+const isFileProtocol = window.location.protocol === 'file:';
+
+function getBasePath() {
+  if (isFileProtocol) {
+    const href = window.location.href;
+    // file:///D:/AI_PROJECTS/LunarData/index.html -> file:///D:/AI_PROJECTS/LunarData/
+    const basePath = href.substring(0, href.lastIndexOf('/') + 1);
+    return basePath;
+  }
+  return './';
+}
+
+// 測試用
+console.log('Protocol:', window.location.protocol);
+console.log('Location:', window.location.href);
+console.log('Base path:', getBasePath());
+
+function init() {
+  const today = new Date();
+  const y = today.getFullYear();
+  const m = today.getMonth();
+  const d = today.getDate();
+
+  if (y < 1970 || y > 2100) {
+    currentDate = new Date(2026, 4, 30);
+  } else {
+    currentDate = new Date(y, m, d);
+  }
+
+  document.getElementById('dateInput').value = formatDate(currentDate);
+  loadData();
+}
+
+function formatDate(dt) {
+  const y = dt.getFullYear();
+  const m = String(dt.getMonth() + 1).padStart(2, '0');
+  const d = String(dt.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
+function onDateChange() {
+  const val = document.getElementById('dateInput').value;
+  if (val) {
+    const parts = val.split('-');
+    currentDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+    loadData();
+  }
+}
+
+function changeDate(delta) {
+  currentDate.setDate(currentDate.getDate() + delta);
+  document.getElementById('dateInput').value = formatDate(currentDate);
+  loadData();
+}
+
+function goToday() {
+  const today = new Date();
+  if (today.getFullYear() >= 1970 && today.getFullYear() <= 2100) {
+    currentDate = today;
+  } else {
+    currentDate = new Date(2026, 4, 30);
+  }
+  document.getElementById('dateInput').value = formatDate(currentDate);
+  loadData();
+}
+
+function loadViaScript(y, m) {
+  return new Promise((resolve, reject) => {
+    const key = `_${y}_${m}`;
+    if (window.LunarData[key]) {
+      resolve(window.LunarData[key]);
+      return;
+    }
+    const script = document.createElement('script');
+    const base = getBasePath();
+    const url = `${base}${y}/${m}.js`;
+    console.log('Loading:', url);
+    script.src = url;
+    script.onload = function() {
+      console.log('Loaded:', url, 'Data exists:', !!window.LunarData[key]);
+      if (window.LunarData[key]) {
+        resolve(window.LunarData[key]);
+      } else {
+        reject(new Error('資料格式錯誤'));
+      }
+      document.head.removeChild(script);
+    };
+    script.onerror = function(e) {
+      console.error('Error loading:', url, e);
+      document.head.removeChild(script);
+      reject(new Error('無法載入 ' + y + '/' + m + '.js'));
+    };
+    document.head.appendChild(script);
+  });
+}
+
+async function loadData() {
+  const app = document.getElementById('app');
+  app.innerHTML = '<div class="loading"><div class="spinner"></div>載入中...</div>';
+
+  const y = currentDate.getFullYear();
+  const m = String(currentDate.getMonth() + 1).padStart(2, '0');
+  const d = currentDate.getDate();
+
+  try {
+    const data = await loadViaScript(y, m);
+    if (!data || !data.days) throw new Error('資料格式錯誤');
+    const dayData = data.days.find(day => day.day === d);
+    if (!dayData) throw new Error('找不到日期資料');
+    render(dayData);
+  } catch (err) {
+    app.innerHTML = `<div class="loading" style="color:#c62828;">
+      <div style="font-size:3rem;margin-bottom:1rem;">⚠</div>
+      <div>無法載入 ${y} 年 ${m} 月 ${d} 日資料</div>
+      <div style="font-size:.85rem;margin-top:.5rem;opacity:.7;">${err.message}</div>
+    </div>`;
+  }
+}
+
+function render(d) {
+  const lunar = d.lunar;
+  const dg = d.dayGanzhi;
+  const mg = d.monthGanzhi;
+  const st = d.solarTerm;
+  const tw = d.twelveOfficer;
+  const ld = d.luckyDirection;
+
+  const weekColors = ['#e74c3c','#e67e22','#f1c40f','#27ae60','#2980b9','#8e44ad','#e74c3c'];
+  const weekIdx = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'].indexOf(d.weekDay);
+  const weekColor = weekColors[weekIdx] || '#333';
+
+  const lvl = Math.max(0, Math.min(5, d.todayLevel || 0));
+  const levelStars = '★'.repeat(lvl) + '☆'.repeat(5 - lvl);
+
+  let html = `
+  <div class="date-banner">
+    <div class="ganzhi-year">${lunar.yearGanzhi}年【${lunar.zodiac}年】${mg.full}月</div>
+    <div class="lunar-date">${lunar.monthName} ${lunar.dayName}</div>
+    <div class="gregorian">${d.gregorian} ${d.weekDay}</div>
+    <div class="tags">
+      <span class="tag">節氣：${st.name}</span>
+      <span class="tag">干支：${dg.full}</span>
+      <span class="tag">納音：${dg.nayin}</span>
+      ${d.deityBirthday.length ? d.deityBirthday.map(b => `<span class="tag">${b}</span>`).join('') : ''}
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <!-- 干支 -->
+    <div class="card">
+      <div class="card-title"><span class="icon">天</span>干地支</div>
+      <div class="ganzhi-grid">
+        <div class="ganzhi-item">
+          <div class="label">年柱</div>
+          <div class="value">${lunar.yearGanzhi}</div>
+          <div class="sub">${lunar.zodiac}</div>
+        </div>
+        <div class="ganzhi-item">
+          <div class="label">月柱</div>
+          <div class="value">${mg.full}</div>
+          <div class="sub">${mg.stem}${mg.branch}</div>
+        </div>
+        <div class="ganzhi-item">
+          <div class="label">日柱</div>
+          <div class="value">${dg.full}</div>
+          <div class="sub">${dg.nayin}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 節氣 -->
+    <div class="card">
+      <div class="card-title"><span class="icon">節</span>氣</div>
+      <div class="solar-term-display">
+        <div class="term-name">${st.name}</div>
+        <div class="term-range">${st.startDate} ～ ${st.endDate}</div>
+        <div class="next-term">下一節氣：${st.nextName}（${st.nextDate}）</div>
+      </div>
+    </div>
+
+    <!-- 沖煞 -->
+    <div class="card">
+      <div class="card-title"><span class="icon">沖</span>煞</div>
+      <div style="text-align:center;padding:.5rem;">
+        <div style="font-size:2rem;font-weight:900;color:var(--red);margin-bottom:.3rem;">沖${d.zodiacClash}</div>
+        <div style="font-size:1rem;color:var(--text-light);">${d.clashDetail}</div>
+        <div style="font-size:1.2rem;font-weight:700;margin-top:.5rem;">煞${d.clashDirection}</div>
+      </div>
+    </div>
+
+    <!-- 建除十二神 -->
+    <div class="card">
+      <div class="card-title"><span class="icon">建</span>除十二神</div>
+      <div class="officer-display">
+        <div class="officer-main">
+          <div class="name">${tw.name}</div>
+          <div class="god">${tw.god}</div>
+        </div>
+        <div class="officer-badge ${tw.isYellowRoad ? 'yellow' : 'black'}">
+          ${tw.isYellowRoad ? '黃道吉日' : '黑道凶日'}
+        </div>
+      </div>
+    </div>
+
+    <!-- 二十八宿 -->
+    <div class="card">
+      <div class="card-title"><span class="icon">星</span>宿</div>
+      <div class="star-display">${d.twentyEightMansion}</div>
+    </div>
+
+    <!-- 九星 -->
+    <div class="card" style="cursor:pointer;" onclick="window.location.href='ninestar.html'">
+      <div class="card-title"><span class="icon">九</span>宮飛星 <span style="font-size:.7rem;color:var(--text-light);margin-left:auto;">點擊查看詳解 →</span></div>
+      <div class="ninestar-display">
+        ${renderNineStar(d.nineStar)}
+      </div>
+    </div>
+
+    <!-- 宜忌 -->
+    <div class="card full">
+      <div class="card-title"><span class="icon">宜</span>忌</div>
+      <div class="yiji-section">
+        <div class="yiji-label yi">宜</div>
+        <div class="yiji-tags">
+          ${d.auspicious.map(item => `<span class="yiji-tag yi">${item}</span>`).join('')}
+        </div>
+      </div>
+      <div class="yiji-section">
+        <div class="yiji-label ji">忌</div>
+        <div class="yiji-tags">
+          ${d.inauspicious.map(item => `<span class="yiji-tag ji">${item}</span>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- 吉凶時 -->
+    <div class="card full">
+      <div class="card-title"><span class="icon">時</span>辰吉凶</div>
+      <div class="hours-grid">
+        ${renderHours(d)}
+      </div>
+    </div>
+
+    <!-- 吉凶神 -->
+    <div class="card full">
+      <div class="card-title"><span class="icon">神</span>煞</div>
+      <div class="gods-grid">
+        <div class="gods-section">
+          <div class="yiji-label yi" style="margin-bottom:.5rem;">吉神宜趨</div>
+          <div>${d.goodGods.map(g => `<span class="god-tag good">${g}</span>`).join('')}</div>
+        </div>
+        <div class="gods-section">
+          <div class="yiji-label ji" style="margin-bottom:.5rem;">凶神宜忌</div>
+          <div>${d.badGods.map(g => `<span class="god-tag bad">${g}</span>`).join('')}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 方位 -->
+    <div class="card">
+      <div class="card-title"><span class="icon">方</span>位</div>
+      <div class="direction-grid">
+        ${Object.entries(ld).map(([k,v]) => `
+          <div class="direction-item">
+            <span class="dir-label">${k}</span>
+            <span class="dir-value">${v}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <!-- 彭祖百忌 -->
+    <div class="card">
+      <div class="card-title"><span class="icon">彭</span>祖百忌</div>
+      <div class="peng-text">${d.pengTaboo}</div>
+    </div>
+
+    <!-- 胎神 -->
+    <div class="card">
+      <div class="card-title"><span class="icon">胎</span>神</div>
+      <div class="peng-text">${d.fetalGod}</div>
+    </div>
+
+    <!-- 神明誕辰 -->
+    ${d.deityBirthday.length ? `
+    <div class="card full">
+      <div class="card-title"><span class="icon">神</span>明誕辰</div>
+      <div class="deity-list">
+        ${d.deityInfo ? d.deityInfo.map(di => {
+          const hasInfo = di.info && di.info.description;
+          return `<div class="deity-item" style="cursor:${hasInfo ? 'pointer' : 'default'}" onclick="${hasInfo ? `this.querySelector('.deity-detail').classList.toggle('show')` : ''}">
+            <div style="font-weight:700;font-size:1.1rem;">${di.name}</div>
+            ${hasInfo ? `
+            <div class="deity-detail">
+              <div style="margin-top:.5rem;font-size:.85rem;color:#666;text-align:left;">
+                ${di.info.title ? `<div style="margin-bottom:.3rem;"><b>聖號：</b>${di.info.title}</div>` : ''}
+                ${di.info.description ? `<div style="margin-bottom:.3rem;"><b>簡介：</b>${di.info.description}</div>` : ''}
+                ${di.info.image ? `<div style="margin-bottom:.3rem;"><b>形象：</b>${di.info.image}</div>` : ''}
+                ${di.info.temple ? `<div style="margin-bottom:.3rem;"><b>廟宇：</b>${di.info.temple}</div>` : ''}
+                ${di.info.blessing ? `<div style="margin-bottom:.3rem;"><b>祈求：</b>${di.info.blessing}</div>` : ''}
+                ${di.info.note ? `<div style="margin-top:.5rem;padding-top:.5rem;border-top:1px dashed #e8d5b0;font-size:.8rem;color:#888;"><b>小知識：</b>${di.info.note}</div>` : ''}
+              </div>
+            </div>
+            ` : ''}
+          </div>`;
+        }).join('') : d.deityBirthday.map(b => `<div class="deity-item">${b}</div>`).join('')}
+      </div>
+    </div>
+    ` : ''}
+
+    <!-- 吉凶等級 -->
+    <div class="card">
+      <div class="card-title"><span class="icon">吉</span>凶等級</div>
+      <div class="level-display">
+        <div class="level-stars">${levelStars}</div>
+        <div class="level-desc">${d.todayLevelName}</div>
+        <div style="margin-top:.5rem;">
+          <span class="officer-badge ${d.isYellowRoad ? 'yellow' : 'black'}">
+            ${d.isYellowRoad ? '黃道日' : '黑道日'}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 節季 -->
+    <div class="card">
+      <div class="card-title"><span class="icon">季</span>節</div>
+      <div class="peng-text" style="font-size:1.5rem;font-weight:900;">${d.season}</div>
+    </div>
+
+    <!-- 五行 -->
+    <div class="card">
+      <div class="card-title"><span class="icon">五</span>行</div>
+      <div class="elements-list">
+        ${d.fiveElements.map(e => `<span class="element-chip">${e}</span>`).join('')}
+      </div>
+    </div>
+
+  </div>`;
+
+  document.getElementById('app').innerHTML = html;
+}
+
+function renderNineStar(str) {
+  const positions = ['中宮','西北','西','東北','南','北','西南','東','東南'];
+  let html = '';
+  for (let i = 0; i < 9 && i < str.length; i++) {
+    const cls = i === 0 ? 'center' : '';
+    html += `<div class="ninestar-cell ${cls}" title="${positions[i]}">${str[i]}</div>`;
+  }
+  return html;
+}
+
+function renderHours(d) {
+  const branches = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+  let html = '';
+  branches.forEach(b => {
+    const isGood = d.auspiciousHours.includes(b);
+    const gz = d.hourGanzhi[b] || '';
+    const cls = isGood ? 'good' : 'bad';
+    const status = isGood ? '吉' : '凶';
+    html += `
+      <div class="hour-item ${cls}">
+        <div class="time">${b}</div>
+        <div class="gz">${gz}</div>
+        <div class="status">${status}</div>
+      </div>`;
+  });
+  return html;
+}
+
+init();
+</script>
+</body>
+</html>
