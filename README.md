@@ -2,9 +2,7 @@
 
 > 純前端黃曆查詢系統，直接開啟 `index.html` 即可使用，無需任何伺服器或後端環境。
 
->
->[線上展示](https://donma.github.io/LunarData/)
->
+**[線上展示](https://donma.github.io/LunarData/)**
 
 ## 快速開始
 
