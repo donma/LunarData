@@ -247,11 +247,53 @@
     border-radius: 6px;
     font-size: .85rem;
     transition: all .2s;
+    position: relative;
+    cursor: help;
   }
   .yiji-tag.yi { border-color: #a5d6a7; color: #2e7d32; }
   .yiji-tag.ji { border-color: #ef9a9a; color: #c62828; }
   .yiji-tag.yi:hover { background: #e8f5e9; }
   .yiji-tag.ji:hover { background: #ffebee; }
+  .yiji-tag .tip {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: #fff;
+    padding: .5rem .8rem;
+    border-radius: 6px;
+    font-size: .8rem;
+    white-space: nowrap;
+    z-index: 200;
+    pointer-events: none;
+    line-height: 1.5;
+    max-width: 280px;
+    white-space: normal;
+    text-align: center;
+  }
+  .yiji-tag .tip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #333;
+  }
+  .yiji-tag:hover .tip,
+  .yiji-tag:active .tip {
+    display: block;
+  }
+  @media (max-width: 768px) {
+    .yiji-tag .tip {
+      white-space: normal;
+      min-width: 200px;
+      max-width: 250px;
+      font-size: .75rem;
+    }
+  }
 
   /* Hours */
   .hours-grid {
@@ -552,6 +594,145 @@ console.log('Protocol:', window.location.protocol);
 console.log('Location:', window.location.href);
 console.log('Base path:', getBasePath());
 
+// ============================
+// 宜忌解釋字典
+// ============================
+const YIJI_EXPLAIN = {
+  "嫁娶": "男娶女嫁，舉行結婚典禮",
+  "納采": "男方向女方送求婚禮物，即訂婚",
+  "訂盟": "訂立婚約，訂婚儀式",
+  "祭祀": "敬神、求神、祭拜祖先",
+  "祈福": "祈求神明降福或設醮還願",
+  "求嗣": "向神明求子",
+  "開光": "神佛像塑成後供奉上位之事",
+  "出行": "外出旅行、觀光遊覽",
+  "移徙": "搬家遷移住所",
+  "入宅": "遷入新宅，新居落成典禮",
+  "修造": "陽宅的建造與修理",
+  "動土": "陽宅建築開工挖土（非陰宅）",
+  "破土": "陰宅埋葬用的破土（非陽宅）",
+  "安葬": "舉行埋葬儀式",
+  "安床": "安置、移動睡床臥鋪",
+  "安門": "房屋裝設門戶",
+  "上梁": "裝上建築物屋頂的梁木",
+  "豎柱": "豎立建築物的柱子",
+  "開市": "商店行號開張做生意",
+  "交易": "買賣交易",
+  "立券": "訂立各種契約",
+  "納財": "購置產業、收購財物",
+  "納畜": "買入家畜飼養",
+  "牧養": "牧養家畜",
+  "栽種": "種植植物、接果、種田禾",
+  "解除": "沖洗清掃宅舍、解除災厄",
+  "拆卸": "拆掉建築物",
+  "修造": "陽宅堅造與修理",
+  "起基": "奠基、建築開始",
+  "定磉": "安放柱子下的基石",
+  "蓋屋": "建造房屋",
+  "造橋": "建造橋樑",
+  "開池": "開鑿水池",
+  "掘井": "開鑿水井",
+  "放水": "建築蓄水池灌水",
+  "經絡": "紡織、針灸相關",
+  "針灸": "針刺艾灸治病",
+  "治病": "醫療疾病",
+  "求醫療病": "就醫治療",
+  "會親友": "拜訪親友",
+  "進人口": "收納養子女或認乾親",
+  "掛匾": "懸掛招牌或匾額",
+  "造倉": "建築或修理倉庫",
+  "塞穴": "堵塞洞穴或蟻穴",
+  "補垣": "修補房屋或圍牆",
+  "築堤防": "建築堤防",
+  "開渠": "開溝挖渠",
+  "穿井": "開鑿水井",
+  "作灶": "安修廚灶、廚爐移位",
+  "作廁": "建造廁所",
+  "剃頭": "修剪頭髮",
+  "理髮": "修剪頭髮",
+  "冠笄": "舉行男女成人禮（冠指男、笄指女）",
+  "裁衣": "裁製新娘衣服或壽衣",
+  "合帳": "製作蚊帳",
+  "沐浴": "沐浴齋戒",
+  "掃舍": "清掃房屋灰塵",
+  "破屋": "拆除房屋",
+  "壞垣": "拆除圍牆",
+  "開倉": "打開倉庫、出貨放債",
+  "出貨財": "商家銷貨、送出貨物",
+  "醞釀": "釀酒、發酵相關",
+  "掛匾": "懸掛招牌匾額",
+  "畋獵": "打獵或捕捉禽獸",
+  "捕捉": "撲滅害蟲或捕捉生物",
+  "結網": "製作漁網",
+  "取漁": "撈捕水中魚蝦",
+  "入殮": "將遺體放入棺材",
+  "移柩": "葬儀時將棺木移出屋外",
+  "啟攢": "停棺待葬或拾骨遷葬",
+  "除服": "脫下喪服",
+  "成服": "穿上喪服",
+  "謝土": "建築物完工後祭祀",
+  "立碑": "豎立墓碑",
+  "修墳": "修整墳墓",
+  "入學": "入學讀書",
+  "上官": "上任就職",
+  "赴任": "前往任職",
+  "臨政": "處理政務",
+  "頒詔": "頒布詔令",
+  "覃恩": "廣施恩澤",
+  "招賢": "招募賢才",
+  "雪冤": "洗刷冤屈",
+  "訴訟": "打官司",
+  "詞訟": "訴訟、打官司",
+  "安機械": "安裝機器",
+  "造車器": "製造交通工具",
+  "教牛馬": "訓練牛馬",
+  "造畜椆棲": "建造畜欄",
+  "開生墳": "開造墳墓破土動工",
+  "平治道塗": "鋪平道路",
+  "修置產室": "修建產房",
+  "修宮室": "修建宮殿房屋",
+  "修倉庫": "修理倉庫",
+  "安碓磑": "安裝舂米器具",
+  "掛匾": "懸掛招牌匾額",
+  "求嗣": "向神明求子",
+  "齋醮": "禮佛敬神的儀式、做法事",
+  "酬神": "感謝神明庇佑",
+  "出火": "移動神位，火指香火",
+  "拆卸": "拆掉建築物",
+  "伐木": "砍伐樹木",
+  "架馬": "裝上建築物屋頂的梁",
+  "作梁": "砍伐樹木作屋梁",
+  "行喪": "辦理喪事",
+  "乘船渡水": "搭船渡河",
+  "諸事不宜": "沒有特別適合做的事",
+  "餘事勿取": "除了黃曆允許外，其他事都不宜做",
+  "祈福": "祈求神明降福",
+  "開光": "神佛像塑成後供奉上位",
+  "解除": "沖洗清掃宅舍、解除災厄",
+  "酬神": "感謝神明",
+  "普渡": "祭祀好兄弟、超渡亡魂",
+  "合壽木": "製作棺材（人未死先行製作）",
+  "安香": "安放神位",
+  "齋醮": "道教法會儀式",
+  "出師": "出兵征戰",
+  "佈政事": "發布政令",
+  "上冊": "上奏章",
+  "上表章": "呈遞奏章",
+  "舉正直": "推舉正直之士",
+  "施恩": "施予恩惠",
+  "宣政事": "宣布政令",
+  "恤孤煢": "救濟孤苦無依者",
+  "裁制": "裁決制裁",
+  "繕城郭": "修繕城牆",
+  "選將": "選拔將領",
+  "安撫邊境": "安定邊疆",
+  "慶賜": "慶祝賞賜"
+};
+
+function getYijiExplain(item) {
+  return YIJI_EXPLAIN[item] || '';
+}
+
 function init() {
   const today = new Date();
   const y = today.getFullYear();
@@ -756,17 +937,23 @@ function render(d) {
 
     <!-- 宜忌 -->
     <div class="card full">
-      <div class="card-title"><span class="icon">宜</span>忌</div>
+      <div class="card-title"><span class="icon">宜</span>忌 <span style="font-size:.7rem;color:var(--text-light);margin-left:auto;">移鼠查看解釋</span></div>
       <div class="yiji-section">
         <div class="yiji-label yi">宜</div>
         <div class="yiji-tags">
-          ${d.auspicious.map(item => `<span class="yiji-tag yi">${item}</span>`).join('')}
+          ${d.auspicious.map(item => {
+            const explain = getYijiExplain(item);
+            return `<span class="yiji-tag yi">${item}${explain ? `<span class="tip">${explain}</span>` : ''}</span>`;
+          }).join('')}
         </div>
       </div>
       <div class="yiji-section">
         <div class="yiji-label ji">忌</div>
         <div class="yiji-tags">
-          ${d.inauspicious.map(item => `<span class="yiji-tag ji">${item}</span>`).join('')}
+          ${d.inauspicious.map(item => {
+            const explain = getYijiExplain(item);
+            return `<span class="yiji-tag ji">${item}${explain ? `<span class="tip">${explain}</span>` : ''}</span>`;
+          }).join('')}
         </div>
       </div>
     </div>
