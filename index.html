@@ -1352,18 +1352,29 @@ function getStar28Explain(star) {
 }
 
 function init() {
-  const today = new Date();
-  const y = today.getFullYear();
-  const m = today.getMonth();
-  const d = today.getDate();
-
-  if (y < 1970 || y > 2100) {
-    currentDate = new Date(2026, 4, 30);
-  } else {
-    currentDate = new Date(y, m, d);
+  // 從 URL 參數讀取日期
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const dateParam = params.get('date');
+    
+    if (dateParam && /^\d{4}-\d{2}-\d{2}$/.test(dateParam)) {
+      const parts = dateParam.split('-');
+      currentDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+    } else {
+      throw new Error('no param');
+    }
+  } catch(e) {
+    const today = new Date();
+    const y = today.getFullYear();
+    if (y >= 1970 && y <= 2100) {
+      currentDate = today;
+    } else {
+      currentDate = new Date(2026, 4, 30);
+    }
   }
 
   document.getElementById('dateInput').value = formatDate(currentDate);
+  updateUrl();
   loadData();
 }
 
@@ -1379,8 +1390,47 @@ function onDateChange() {
   if (val) {
     const parts = val.split('-');
     currentDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+    updateUrl();
     loadData();
   }
+}
+
+function changeDate(delta) {
+  currentDate.setDate(currentDate.getDate() + delta);
+  document.getElementById('dateInput').value = formatDate(currentDate);
+  updateUrl();
+  loadData();
+}
+
+function goToday() {
+  const today = new Date();
+  if (today.getFullYear() >= 1970 && today.getFullYear() <= 2100) {
+    currentDate = today;
+  } else {
+    currentDate = new Date(2026, 4, 30);
+  }
+  document.getElementById('dateInput').value = formatDate(currentDate);
+  updateUrl();
+  loadData();
+}
+
+function changeToDate(day) {
+  currentDate.setDate(day);
+  document.getElementById('dateInput').value = formatDate(currentDate);
+  updateUrl();
+  loadData();
+}
+
+function updateUrl() {
+  try {
+    const dateStr = formatDate(currentDate);
+    const url = new URL(window.location);
+    url.searchParams.set('date', dateStr);
+    window.history.replaceState({}, '', url);
+  } catch(e) {
+    // file:// 協議不支援 URL 更新，忽略
+  }
+}
 }
 
 function changeDate(delta) {
