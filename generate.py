@@ -514,14 +514,29 @@ def get_clash_zodiac(clash_str):
     return clash_str
 
 
-def parse_clash_direction(clash_str):
+def parse_clash_direction(clash_str, day_branch=None):
+    """根據日地支計算煞方位（傳統算法）
+    子日煞南、丑日煞東、寅日煞北、卯日煞西
+    辰日煞南、巳日煞東、午日煞北、未日煞西
+    申日煞南、酉日煞東、戌日煞北、亥日煞西
+    """
+    # 優先使用日地支計算
+    if day_branch:
+        sha_map = {
+            "子": "南方", "丑": "東方", "寅": "北方", "卯": "西方",
+            "辰": "南方", "巳": "東方", "午": "北方", "未": "西方",
+            "申": "南方", "酉": "東方", "戌": "北方", "亥": "西方"
+        }
+        return sha_map.get(day_branch, "")
+    
+    # 備用：從沖煞字串推斷
     if not clash_str:
         return ""
     zodiac = get_clash_zodiac(clash_str)
     direction_map = {
-        "鼠": "北方", "牛": "東方", "虎": "東方", "兔": "東方",
-        "龍": "南方", "蛇": "南方", "馬": "南方", "羊": "西方",
-        "猴": "西方", "雞": "西方", "狗": "北方", "豬": "北方"
+        "鼠": "南方", "牛": "東方", "虎": "北方", "兔": "西方",
+        "龍": "南方", "蛇": "東方", "馬": "北方", "羊": "西方",
+        "猴": "南方", "雞": "東方", "狗": "北方", "豬": "西方"
     }
     return direction_map.get(zodiac, "")
 
@@ -595,7 +610,8 @@ def generate_day_data(dt):
     bad_gods = s2t(a.badGodName) if a.badGodName else []
 
     clash_zodiac = get_clash_zodiac(a.get_chineseZodiacClash())
-    clash_direction = parse_clash_direction(a.get_chineseZodiacClash())
+    day_branch = day8[1] if len(day8) > 1 else ""
+    clash_direction = parse_clash_direction(a.get_chineseZodiacClash(), day_branch)
     clash_detail = s2t(a.get_chineseZodiacClash())
 
     deity_birthdays = get_deity_birthdays(lunar_month, lunar_day, dt.month, dt.day)

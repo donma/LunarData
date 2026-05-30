@@ -1400,29 +1400,39 @@ function goToday() {
   loadData();
 }
 
-function getZodiacAge(zodiac, currentYear) {
+function getZodiacAge(clashDetail, currentYear) {
+  // 從 clashDetail 中提取被沖的生肖
   const zodiacOrder = ['鼠','牛','虎','兔','龍','蛇','馬','羊','猴','雞','狗','豬'];
-  const idx = zodiacOrder.indexOf(zodiac);
-  if (idx === -1) return '';
+  const s2t = {'龙':'龍','蛇':'蛇','马':'馬','羊':'羊','猴':'猴','鸡':'雞','狗':'狗','猪':'豬','鼠':'鼠','牛':'牛','虎':'虎','兔':'兔'};
   
-  // 計算該生肖在本世紀的年份，然後算虛歲
-  // 虛歲 = 當前年 - 出生年 + 1
-  const ages = [];
-  // 從最近的年份開始往回推
-  let birthYear = currentYear - ((currentYear - 2020 + idx) % 12);
-  if (birthYear > currentYear) birthYear -= 12;
-  if (birthYear < 1900) birthYear += 12;
-  
-  // 計算3個不同世代的虛歲
-  for (let i = 0; i < 4; i++) {
-    const y = birthYear - (i * 12);
-    if (y >= 1924) { // 合理範圍
-      const age = currentYear - y + 1; // 虛歲
-      ages.push(age);
+  let clashedZodiac = '';
+  for (const z of zodiacOrder) {
+    if (clashDetail.includes(z)) {
+      clashedZodiac = z;
+    }
+  }
+  for (const [s, t] of Object.entries(s2t)) {
+    if (clashDetail.includes(s)) {
+      clashedZodiac = t;
     }
   }
   
-  return ages.join('、') + '歲';
+  if (!clashedZodiac) return '';
+  
+  const zIdx = zodiacOrder.indexOf(clashedZodiac);
+  if (zIdx === -1) return '';
+  
+  // 計算最近的該生肖年份
+  // 2020年是鼠年（index 0）
+  // 所以 zodiac index 為 z 的年份 = 2020 + z (mod 12 調整)
+  let birthYear = 2020 + zIdx;
+  while (birthYear > currentYear) {
+    birthYear -= 12;
+  }
+  
+  // 虛歲 = 當前年 - 出生年 + 1
+  const age = currentYear - birthYear + 1;
+  return age + '歲';
 }
 
 function changeToDate(day) {
@@ -1581,8 +1591,7 @@ function render(d, monthData) {
       <div class="card-title"><span class="icon">沖</span>煞</div>
       <div style="text-align:center;padding:.5rem;">
         <div style="font-size:2rem;font-weight:900;color:var(--red);margin-bottom:.3rem;">沖${d.zodiacClash}</div>
-        <div style="font-size:1rem;color:var(--text-light);">${d.clashDetail}</div>
-        <div style="font-size:.85rem;color:var(--text-light);margin-top:.3rem;">虛歲 ${getZodiacAge(d.zodiacClash, currentDate.getFullYear())}</div>
+        <div style="font-size:1rem;color:var(--text-light);">${d.clashDetail} ${getZodiacAge(d.clashDetail, currentDate.getFullYear())}</div>
         <div style="font-size:1.2rem;font-weight:700;margin-top:.5rem;">煞${d.clashDirection}</div>
       </div>
     </div>
