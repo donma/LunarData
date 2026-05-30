@@ -1433,33 +1433,45 @@ function updateUrl() {
 
 function getZodiacAge(clashDetail, currentYear) {
   var zodiacOrder = ['鼠','牛','虎','兔','龍','蛇','馬','羊','猴','雞','狗','豬'];
-  var clashedZodiac = '';
+  var branches = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+  var stems = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
   
-  // 從"沖X"格式提取生肖
+  // 從"沖X"提取生肖
   var idx = clashDetail.indexOf('沖');
   if (idx === -1) idx = clashDetail.indexOf('冲');
-  if (idx >= 0) {
-    var after = clashDetail.substring(idx + 1);
-    for (var i = 0; i < zodiacOrder.length; i++) {
-      if (after.indexOf(zodiacOrder[i]) >= 0) {
-        clashedZodiac = zodiacOrder[i];
-        break;
+  if (idx < 0) return '';
+  
+  var after = clashDetail.substring(idx + 1);
+  var clashedZodiac = '';
+  for (var i = 0; i < zodiacOrder.length; i++) {
+    if (after.indexOf(zodiacOrder[i]) >= 0) {
+      clashedZodiac = zodiacOrder[i];
+      break;
+    }
+  }
+  if (!clashedZodiac) return '';
+  
+  var zIdx = zodiacOrder.indexOf(clashedZodiac);
+  var clashedBranch = branches[zIdx];
+  
+  // 用60甲子計算：找到最近的該地支年份
+  // 甲子年 = 1984年
+  // 從1984年開始，找出所有該地支的年份
+  var ages = [];
+  for (var year = 1924; year <= currentYear; year++) {
+    var branchIdx = (year - 4) % 12;
+    if (branchIdx < 0) branchIdx += 12;
+    if (branches[branchIdx] === clashedBranch) {
+      var age = currentYear - year + 1;
+      if (age > 0 && age < 120) {
+        ages.push(age);
       }
     }
   }
   
-  if (!clashedZodiac) return '';
-  
-  var zIdx = zodiacOrder.indexOf(clashedZodiac);
-  
-  // 2020年是鼠年(index 0)
-  var birthYear = 2020 + zIdx;
-  while (birthYear > currentYear) {
-    birthYear -= 12;
-  }
-  
-  var age = currentYear - birthYear + 1;
-  return age + '歲';
+  // 返回所有可能的歲數（每12年一循環）
+  if (ages.length === 0) return '';
+  return ages.join('、') + '歲';
 }
 
 function loadViaScript(y, m) {
