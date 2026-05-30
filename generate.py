@@ -452,22 +452,24 @@ def get_branch_index(branch):
 
 def get_western_zodiac(month, day):
     """取得西方星座"""
-    dates = [(1,20),(2,19),(3,21),(4,20),(5,21),(6,22),(7,23),(8,23),(9,23),(10,24),(11,23),(12,22)]
-    signs = ['水瓶座','雙魚座','白羊座','金牛座','雙子座','巨蟹座','獅子座','處女座','天秤座','天蠍座','射手座','摩羯座']
-    idx = 0
-    for i, (m, d) in enumerate(dates):
-        if month == m and day < d:
-            idx = i
-            break
-        elif month == m and day >= d:
-            idx = (i + 1) % 12
-            break
-    else:
-        if month == 12 and day >= 22:
-            idx = 0
-        else:
-            idx = 11
-    return signs[idx]
+    # 星座分界日期
+    boundaries = [
+        (1, 20, '水瓶座'), (2, 19, '雙魚座'), (3, 21, '白羊座'),
+        (4, 20, '金牛座'), (5, 21, '雙子座'), (6, 22, '巨蟹座'),
+        (7, 23, '獅子座'), (8, 23, '處女座'), (9, 23, '天秤座'),
+        (10, 24, '天蠍座'), (11, 23, '射手座'), (12, 22, '摩羯座')
+    ]
+    
+    # 從後面往前找，找到第一個符合的
+    for i in range(len(boundaries) - 1, -1, -1):
+        m, d, sign = boundaries[i]
+        if month == m and day >= d:
+            return sign
+        elif month > m:
+            return sign
+    
+    # 12月22日之前到1月19日是摩羯座
+    return '摩羯座'
 
 def get_moon_phase(lunar_day):
     """取得月相"""
