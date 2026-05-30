@@ -502,12 +502,34 @@ def get_deity_info(deity_name):
 
 
 def get_clash_zodiac(clash_str):
+    """從沖煞字串提取被沖的生肖
+    格式: "X日沖Y" 或 "X日冲Y"，Y 是被沖的生肖
+    """
     if not clash_str:
         return ""
+    
+    # 找到"沖"或"冲"的位置，取後面的生肖
+    clash_idx = -1
+    for i, c in enumerate(clash_str):
+        if c in ('沖', '冲'):
+            clash_idx = i
+            break
+    
+    if clash_idx >= 0:
+        # 取"沖"後面的部分
+        after_clash = clash_str[clash_idx+1:]
+        # 從後面找第一個生肖
+        for z in ZODIAC:
+            if z in after_clash:
+                return z
+        for z in ZODIAC_SIMPLIFIED:
+            if z in after_clash:
+                return zodiac_to_traditional(z)
+    
+    # 備用：找最後出現的生肖
     for z in reversed(ZODIAC):
         if z in clash_str:
             return z
-    # 簡體 fallback
     for z in reversed(ZODIAC_SIMPLIFIED):
         if z in clash_str:
             return zodiac_to_traditional(z)
