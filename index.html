@@ -1607,6 +1607,7 @@ function render(d, monthData) {
       <div class="card-title"><span class="icon">節</span>氣</div>
       <div class="solar-term-display">
         <div class="term-name">${st.name}</div>
+        ${st.desc ? `<div style="font-size:.85rem;color:var(--text-light);margin-top:.3rem;">${st.desc}</div>` : ''}
         <div class="term-range">${st.startDate} ～ ${st.endDate}</div>
         <div class="next-term">下一節氣：${st.nextName}（${st.nextDate}）</div>
       </div>

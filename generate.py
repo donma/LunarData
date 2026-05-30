@@ -15,6 +15,7 @@ import datetime
 import json
 import os
 from sanpai import get_jianchu_yiji, get_star28_yiji, get_jiubai_yiji
+from solar_term_desc import get_solar_term_desc
 
 # ============================
 # 簡體轉繁體字典（涵蓋黃曆常用字）
@@ -599,6 +600,7 @@ def generate_day_data(dt):
             hour_ganzhi[time_periods[i]] = twohour_list[i]
 
     solar_term = get_solar_term_info(dt, a.thisYearSolarTermsDic)
+    solar_term["desc"] = get_solar_term_desc(solar_term.get("name", ""))
 
     officer_info = a.get_today12DayOfficer()
     twelve_officer = s2t(officer_info[0]) if officer_info else ""
