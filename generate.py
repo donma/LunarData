@@ -16,6 +16,7 @@ import json
 import os
 from sanpai import get_jianchu_yiji, get_star28_yiji, get_jiubai_yiji
 from solar_term_desc import get_solar_term_desc
+from peng_taboo import get_peng_taboo_explain
 
 # ============================
 # 簡體轉繁體字典（涵蓋黃曆常用字）
@@ -878,6 +879,7 @@ def generate_day_data(dt):
         "twentyEightMansion_month": star28_month,
         "nineStar": nine_star,
         "pengTaboo": peng_taboo,
+        "pengTabooExplain": get_peng_taboo_explain(peng_taboo),
         "fiveElements": five_elements,
         "auspicious": good_things,
         "inauspicious": bad_things,

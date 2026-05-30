@@ -1863,6 +1863,16 @@ function render(d, monthData) {
     <div class="card">
       <div class="card-title"><span class="icon">彭</span>祖百忌</div>
       <div class="peng-text">${d.pengTaboo}</div>
+      ${d.pengTabooExplain && d.pengTabooExplain.length > 0 ? `
+      <div style="margin-top:.8rem;padding-top:.8rem;border-top:1px dashed var(--border);">
+        ${d.pengTabooExplain.map(item => `
+          <div style="font-size:.85rem;color:var(--text);margin-bottom:.5rem;line-height:1.6;">
+            <span style="color:var(--red);font-weight:700;">${item.original}</span>
+            ${item.explain ? ` → <span style="color:var(--text-light);">${item.explain}</span>` : ''}
+          </div>
+        `).join('')}
+      </div>
+      ` : ''}
     </div>
 
     <!-- 胎神 -->
