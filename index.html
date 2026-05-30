@@ -1592,10 +1592,10 @@ function renderHolidays(dt) {
       <div class="deity-list">
         ${holidays.map(h => `
           <div class="deity-item" onclick="this.querySelector('.deity-detail').classList.toggle('show')" style="cursor:pointer;">
-            <div style="font-weight:700;font-size:1.1rem;">${h.emoji} ${h.name}</div>
+            <div style="font-weight:700;font-size:1.1rem;">${h.emoji || ''} ${h.name}</div>
             ${h.englishName ? `<div style="font-size:.8rem;color:var(--text-light);">${h.englishName}</div>` : ''}
             <div class="deity-detail">
-              <div style="margin-top:.5rem;font-size:.85rem;color:var(--text);line-height:1.6;">${h.story}</div>
+              <div style="margin-top:.5rem;font-size:.85rem;color:var(--text);line-height:1.6;">${h.story || h.desc || ''}</div>
               ${h.category ? `<div style="margin-top:.5rem;font-size:.75rem;color:var(--text-light);">分類：${h.category}</div>` : ''}
             </div>
           </div>
