@@ -527,9 +527,12 @@
   /* Charts Section */
   .charts-section {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     gap: 1.5rem;
     margin-bottom: 1.5rem;
+  }
+  .charts-top {
+    grid-template-columns: repeat(3, 1fr);
   }
   .full-chart {
     grid-column: 1 / -1;
@@ -836,6 +839,7 @@
     .date-bar input[type="date"] { font-size: .85rem; padding: .4rem .5rem; }
     .date-bar button { padding: .4rem .6rem; font-size: .85rem; }
     .charts-section { grid-template-columns: 1fr; }
+    .charts-top { grid-template-columns: 1fr; }
     .full-chart { grid-column: 1; }
     .pie-container { flex-direction: column; align-items: center; }
     .calendar-day { font-size: .75rem; }
@@ -1409,7 +1413,7 @@ function render(d, monthData) {
   </div>
 
   <!-- 圖表區域 -->
-  <div class="charts-section">
+  <div class="charts-section charts-top">
     <!-- 月曆總覽 -->
     <div class="chart-card">
       <div class="chart-title">📅 月曆總覽</div>
@@ -1427,8 +1431,10 @@ function render(d, monthData) {
       <div class="chart-title">🌀 節氣時間軸</div>
       ${renderSolarTimeline(st)}
     </div>
+  </div>
 
-    <!-- 五行分布（全月視圖，佔滿寬） -->
+  <!-- 五行分布（全月視圖） -->
+  <div class="charts-section">
     <div class="chart-card full-chart">
       <div class="chart-title">🔮 本月每日五行分布</div>
       ${renderElementsChartFull(allDays)}
