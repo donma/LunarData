@@ -601,7 +601,6 @@
     padding: .3rem;
   }
   .calendar-day {
-    aspect-ratio: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -614,7 +613,9 @@
     position: relative;
     border: 2px solid transparent;
     min-width: 0;
-    gap: .1rem;
+    min-height: 42px;
+    padding: 4px 2px;
+    overflow: hidden;
   }
   .calendar-day:hover {
     transform: scale(1.1);
@@ -627,12 +628,12 @@
   .calendar-day .day-num {
     font-size: 1rem;
     font-weight: 700;
-    line-height: 1;
+    line-height: 1.2;
   }
   .calendar-day .day-lunar {
-    font-size: .6rem;
+    font-size: .75rem;
     opacity: .85;
-    line-height: 1;
+    line-height: 1.2;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -640,9 +641,9 @@
     color: inherit;
   }
   .calendar-day .day-solar-term {
-    font-size: .55rem;
+    font-size: .7rem;
     font-weight: 700;
-    line-height: 1;
+    line-height: 1.2;
     color: #E65100;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -894,9 +895,10 @@
     .charts-top { grid-template-columns: 1fr; }
     .full-chart { grid-column: 1; }
     .pie-container { flex-direction: column; align-items: center; }
-    .calendar-day { font-size: .75rem; }
+    .calendar-day { font-size: .75rem; min-height: 36px; }
     .calendar-day .day-num { font-size: .85rem; }
-    .calendar-day .day-lunar { font-size: .5rem; }
+    .calendar-day .day-lunar { font-size: .65rem; }
+    .calendar-day .day-solar-term { font-size: .6rem; }
     .calendar-day { font-size: .75rem; }
     .calendar-day .day-num { font-size: .8rem; }
     .calendar-day .day-lunar { font-size: .5rem; }
