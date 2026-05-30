@@ -1624,12 +1624,23 @@ function render(d, monthData) {
 
     <!-- 沖煞 -->
     <div class="card" style="position:relative;overflow:hidden;">
-      <div style="position:absolute;top:50%;right:10%;transform:translateY(-50%);width:180px;height:180px;opacity:0.08;background-image:url('assets/zodiac/${getZodiacImage(d.zodiacClash)}');background-size:contain;background-repeat:no-repeat;background-position:center;pointer-events:none;"></div>
+      <div style="position:absolute;top:0;left:0;bottom:0;width:40%;opacity:0.06;background-image:url('assets/zodiac/${getZodiacImage(d.lunar.zodiac)}');background-size:contain;background-repeat:no-repeat;background-position:left center;pointer-events:none;"></div>
+      <div style="position:absolute;top:0;right:0;bottom:0;width:40%;opacity:0.06;background-image:url('assets/zodiac/${getZodiacImage(d.zodiacClash)}');background-size:contain;background-repeat:no-repeat;background-position:right center;pointer-events:none;"></div>
       <div class="card-title"><span class="icon">沖</span>煞</div>
-      <div style="text-align:center;padding:.5rem;position:relative;">
-        <div style="font-size:2rem;font-weight:900;color:var(--red);margin-bottom:.3rem;">沖${d.zodiacClash}</div>
-        <div style="font-size:1rem;color:var(--text-light);">${d.clashDetail} ${getZodiacAge(d.clashYearGanzhi, currentDate.getFullYear())}</div>
-        <div style="font-size:1.2rem;font-weight:700;margin-top:.5rem;">煞${d.clashDirection}</div>
+      <div style="text-align:center;padding:.8rem;position:relative;">
+        <div style="display:flex;align-items:center;justify-content:center;gap:1.5rem;margin-bottom:.5rem;">
+          <div style="text-align:center;">
+            <div style="font-size:1.8rem;font-weight:900;">${d.lunar.zodiac}</div>
+            <div style="font-size:.7rem;color:var(--text-light);">日支</div>
+          </div>
+          <div style="font-size:2rem;color:var(--red);">⟷</div>
+          <div style="text-align:center;">
+            <div style="font-size:1.8rem;font-weight:900;color:var(--red);">${d.zodiacClash}</div>
+            <div style="font-size:.7rem;color:var(--text-light);">被沖</div>
+          </div>
+        </div>
+        <div style="font-size:.9rem;color:var(--text-light);">${d.clashDetail} ${getZodiacAge(d.clashYearGanzhi, currentDate.getFullYear())}</div>
+        <div style="font-size:1.1rem;font-weight:700;margin-top:.5rem;">煞${d.clashDirection}</div>
       </div>
     </div>
 
