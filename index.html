@@ -527,9 +527,12 @@
   /* Charts Section */
   .charts-section {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
     margin-bottom: 1.5rem;
+  }
+  .full-chart {
+    grid-column: 1 / -1;
   }
   .chart-card {
     background: var(--card-bg);
@@ -591,12 +594,12 @@
     font-size: .55rem;
     opacity: .8;
   }
-  .level-1 { background: #E8F5E9; color: #2E7D32; }
-  .level-2 { background: #F1F8E9; color: #558B2F; }
-  .level-3 { background: #FFF8E1; color: #F57F17; }
-  .level-4 { background: #FBE9E7; color: #BF360C; }
-  .level-5 { background: #FFEBEE; color: #C62828; }
-  .level-0 { background: #F5F5F5; color: #757575; }
+  .level-1 { background: #E8F5E9; color: #388E3C; }
+  .level-2 { background: #F1F8E9; color: #689F38; }
+  .level-3 { background: #FFF8E1; color: #FFA000; }
+  .level-4 { background: #FFF3E0; color: #E65100; }
+  .level-5 { background: #FFEBEE; color: #D32F2F; }
+  .level-0 { background: #F5F5F5; color: #9E9E9E; }
 
   /* Pie Chart */
   .pie-container {
@@ -666,6 +669,61 @@
   .element-bar-count {
     font-size: .75rem;
     color: var(--text-light);
+  }
+
+  /* Full Month Elements Chart */
+  .elements-full-grid {
+    display: grid;
+    grid-template-columns: repeat(31, 1fr);
+    gap: 3px;
+  }
+  .element-day-cell {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: .65rem;
+    font-weight: 600;
+    position: relative;
+    cursor: default;
+    transition: transform .2s;
+  }
+  .element-day-cell:hover {
+    transform: scale(1.2);
+    z-index: 2;
+  }
+  .element-day-cell .day-num {
+    font-size: .7rem;
+    font-weight: 700;
+  }
+  .element-day-cell .day-el {
+    font-size: .55rem;
+    opacity: .8;
+  }
+  .el-gold { background: #E0E0E0; color: #424242; }
+  .el-wood { background: #C8E6C9; color: #2E7D32; }
+  .el-water { background: #BBDEFB; color: #1565C0; }
+  .el-fire { background: #FFCDD2; color: #C62828; }
+  .el-earth { background: #D7CCC8; color: #4E342E; }
+  .element-legend {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+  .element-legend-item {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    font-size: .8rem;
+  }
+  .element-legend-color {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 3px;
   }
 
   /* Solar Term Timeline */
@@ -778,6 +836,7 @@
     .date-bar input[type="date"] { font-size: .85rem; padding: .4rem .5rem; }
     .date-bar button { padding: .4rem .6rem; font-size: .85rem; }
     .charts-section { grid-template-columns: 1fr; }
+    .full-chart { grid-column: 1; }
     .pie-container { flex-direction: column; align-items: center; }
     .calendar-day { font-size: .75rem; }
     .calendar-day .day-num { font-size: .8rem; }
@@ -795,6 +854,7 @@
     .chart-card { padding: 1rem; }
     .element-bar { width: 45px; }
     .element-bar-fill { height: 80px; }
+    .elements-full-grid { grid-template-columns: repeat(15, 1fr); }
   }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&display=swap" rel="stylesheet">
@@ -1239,6 +1299,27 @@ function goToday() {
   loadData();
 }
 
+function getZodiacAge(zodiac, currentYear) {
+  const zodiacOrder = ['鼠','牛','虎','兔','龍','蛇','馬','羊','猴','雞','狗','豬'];
+  const idx = zodiacOrder.indexOf(zodiac);
+  if (idx === -1) return '';
+  
+  // 計算最近幾個該生肖的年份和歲數
+  const ages = [];
+  // 本命年（最近的）
+  let birthYear = currentYear - ((currentYear - 1900 - idx) % 12);
+  if (birthYear > currentYear) birthYear -= 12;
+  
+  for (let i = 0; i < 3; i++) {
+    const y = birthYear - (i * 12);
+    if (y > 1900) {
+      ages.push(`${currentYear - y}歲`);
+    }
+  }
+  
+  return `(${ages.join('、')})`;
+}
+
 function changeToDate(day) {
   currentDate.setDate(day);
   document.getElementById('dateInput').value = formatDate(currentDate);
@@ -1341,16 +1422,16 @@ function render(d, monthData) {
       ${renderPieChart(allDays)}
     </div>
 
-    <!-- 五行分布 -->
-    <div class="chart-card">
-      <div class="chart-title">🔮 本月五行分布</div>
-      ${renderElementsChart(allDays)}
-    </div>
-
     <!-- 節氣時間軸 -->
     <div class="chart-card">
       <div class="chart-title">🌀 節氣時間軸</div>
       ${renderSolarTimeline(st)}
+    </div>
+
+    <!-- 五行分布（全月視圖，佔滿寬） -->
+    <div class="chart-card full-chart">
+      <div class="chart-title">🔮 本月每日五行分布</div>
+      ${renderElementsChartFull(allDays)}
     </div>
   </div>
 
@@ -1394,6 +1475,7 @@ function render(d, monthData) {
       <div style="text-align:center;padding:.5rem;">
         <div style="font-size:2rem;font-weight:900;color:var(--red);margin-bottom:.3rem;">沖${d.zodiacClash}</div>
         <div style="font-size:1rem;color:var(--text-light);">${d.clashDetail}</div>
+        <div style="font-size:.85rem;color:var(--text-light);margin-top:.3rem;">${getZodiacAge(d.zodiacClash, currentDate.getFullYear())}</div>
         <div style="font-size:1.2rem;font-weight:700;margin-top:.5rem;">煞${d.clashDirection}</div>
       </div>
     </div>
@@ -1428,7 +1510,7 @@ function render(d, monthData) {
 
     <!-- 宜忌 -->
     <div class="card full">
-      <div class="card-title"><span class="icon">宜</span>忌 <span style="font-size:.7rem;color:var(--text-light);margin-left:auto;">移鼠查看解釋</span></div>
+      <div class="card-title"><span class="icon">宜</span>忌</div>
       <div class="yiji-section">
         <div class="yiji-label yi">宜</div>
         <div class="yiji-tags">
@@ -1459,7 +1541,7 @@ function render(d, monthData) {
 
     <!-- 吉凶神 -->
     <div class="card full">
-      <div class="card-title"><span class="icon">神</span>煞 <span style="font-size:.7rem;color:var(--text-light);margin-left:auto;">移鼠查看解釋</span></div>
+      <div class="card-title"><span class="icon">神</span>煞</div>
       <div class="gods-grid">
         <div class="gods-section">
           <div class="yiji-label yi" style="margin-bottom:.5rem;">吉神宜趨</div>
@@ -1634,24 +1716,24 @@ function renderPieChart(allDays) {
   const neutralDeg = neutral / total * 360;
   
   const pieStyle = `background: conic-gradient(
-    #4CAF50 0deg ${goodDeg}deg,
-    #FFC107 ${goodDeg}deg ${goodDeg + neutralDeg}deg,
-    #F44336 ${goodDeg + neutralDeg}deg 360deg
+    #81C784 0deg ${goodDeg}deg,
+    #FFD54F ${goodDeg}deg ${goodDeg + neutralDeg}deg,
+    #EF9A9A ${goodDeg + neutralDeg}deg 360deg
   );`;
   
   let html = `<div class="pie-container">
     <div class="pie-chart" style="${pieStyle}"></div>
     <div class="pie-legend">
       <div class="pie-legend-item">
-        <div class="pie-legend-color" style="background:#4CAF50;"></div>
+        <div class="pie-legend-color" style="background:#81C784;"></div>
         <span>吉日 ${good} 天 (${goodPct}%)</span>
       </div>
       <div class="pie-legend-item">
-        <div class="pie-legend-color" style="background:#FFC107;"></div>
+        <div class="pie-legend-color" style="background:#FFD54F;"></div>
         <span>平日 ${neutral} 天 (${neutralPct}%)</span>
       </div>
       <div class="pie-legend-item">
-        <div class="pie-legend-color" style="background:#F44336;"></div>
+        <div class="pie-legend-color" style="background:#EF9A9A;"></div>
         <span>凶日 ${bad} 天 (${badPct}%)</span>
       </div>
     </div>
@@ -1674,11 +1756,11 @@ function renderElementsChart(allDays) {
   
   const maxVal = Math.max(...Object.values(elements), 1);
   const colors = {
-    '金': '#9E9E9E',
-    '木': '#4CAF50',
-    '水': '#2196F3',
-    '火': '#F44336',
-    '土': '#795548'
+    '金': '#BDBDBD',
+    '木': '#81C784',
+    '水': '#64B5F6',
+    '火': '#EF9A9A',
+    '土': '#BCAAA4'
   };
   
   let html = '<div class="elements-chart">';
@@ -1695,6 +1777,52 @@ function renderElementsChart(allDays) {
   }
   
   html += '</div>';
+  return html;
+}
+
+function renderElementsChartFull(allDays) {
+  const elColors = {
+    '金': { bg: '#E0E0E0', color: '#424242', cls: 'el-gold' },
+    '木': { bg: '#C8E6C9', color: '#2E7D32', cls: 'el-wood' },
+    '水': { bg: '#BBDEFB', color: '#1565C0', cls: 'el-water' },
+    '火': { bg: '#FFCDD2', color: '#C62828', cls: 'el-fire' },
+    '土': { bg: '#D7CCC8', color: '#4E342E', cls: 'el-earth' }
+  };
+  
+  const counts = { '金': 0, '木': 0, '水': 0, '火': 0, '土': 0 };
+  
+  let html = '<div class="elements-full-grid">';
+  
+  allDays.forEach(day => {
+    const nayin = day.dayGanzhi.nayin || '';
+    let el = '土';
+    if (nayin.includes('金')) el = '金';
+    else if (nayin.includes('木')) el = '木';
+    else if (nayin.includes('水')) el = '水';
+    else if (nayin.includes('火')) el = '火';
+    else if (nayin.includes('土')) el = '土';
+    
+    counts[el]++;
+    const cls = elColors[el].cls;
+    
+    html += `<div class="element-day-cell ${cls}" title="${day.gregorian} ${day.dayGanzhi.full} ${nayin}">
+      <span class="day-num">${day.day}</span>
+      <span class="day-el">${el}</span>
+    </div>`;
+  });
+  
+  html += '</div>';
+  
+  // 圖例
+  html += '<div class="element-legend">';
+  for (const [el, info] of Object.entries(elColors)) {
+    html += `<div class="element-legend-item">
+      <div class="element-legend-color" style="background:${info.bg};"></div>
+      <span>${el} ${counts[el]}日</span>
+    </div>`;
+  }
+  html += '</div>';
+  
   return html;
 }
 
