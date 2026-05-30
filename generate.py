@@ -635,6 +635,16 @@ def generate_day_data(dt):
     day_branch = day8[1] if len(day8) > 1 else ""
     clash_direction = parse_clash_direction(a.get_chineseZodiacClash(), day_branch)
     clash_detail = s2t(a.get_chineseZodiacClash())
+    
+    # 計算被沖年份的干支
+    # 日干 -> 被沖年干: 甲己->戊, 乙庚->己, 丙辛->庚, 丁壬->辛, 戊癸->壬
+    day_stem = day8[0] if day8 else ""
+    stem_map = {'甲':'戊','己':'戊','乙':'己','庚':'己','丙':'庚','辛':'庚','丁':'辛','壬':'辛','戊':'壬','癸':'壬'}
+    clash_year_stem = stem_map.get(day_stem, '')
+    # 日支 -> 被沖年支: 子->午, 丑->未, 寅->申, 卯->酉, 辰->戌, 巳->亥
+    branch_map = {'子':'午','丑':'未','寅':'申','卯':'酉','辰':'戌','巳':'亥','午':'子','未':'丑','申':'寅','酉':'卯','戌':'辰','亥':'巳'}
+    clash_year_branch = branch_map.get(day_branch, '')
+    clash_year_ganzhi = clash_year_stem + clash_year_branch
 
     deity_birthdays = get_deity_birthdays(lunar_month, lunar_day, dt.month, dt.day)
     # 神明小知識
@@ -692,6 +702,7 @@ def generate_day_data(dt):
         "zodiacClash": clash_zodiac,
         "clashDirection": clash_direction,
         "clashDetail": clash_detail,
+        "clashYearGanzhi": clash_year_ganzhi,
         "solarTerm": solar_term,
         "season": season,
         "deityBirthday": deity_birthdays,

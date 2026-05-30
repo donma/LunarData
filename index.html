@@ -1431,37 +1431,31 @@ function updateUrl() {
   }
 }
 
-function getZodiacAge(clashDetail, currentYear) {
-  var zodiacOrder = ['鼠','牛','虎','兔','龍','蛇','馬','羊','猴','雞','狗','豬'];
-  var branches = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+function getZodiacAge(clashYearGanzhi, currentYear) {
+  if (!clashYearGanzhi || clashYearGanzhi.length < 2) return '';
+  
   var stems = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+  var branches = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
   
-  // 從"沖X"提取生肖
-  var idx = clashDetail.indexOf('沖');
-  if (idx === -1) idx = clashDetail.indexOf('冲');
-  if (idx < 0) return '';
+  var yearStem = clashYearGanzhi[0];
+  var yearBranch = clashYearGanzhi[1];
   
-  var after = clashDetail.substring(idx + 1);
-  var clashedZodiac = '';
-  for (var i = 0; i < zodiacOrder.length; i++) {
-    if (after.indexOf(zodiacOrder[i]) >= 0) {
-      clashedZodiac = zodiacOrder[i];
-      break;
-    }
-  }
-  if (!clashedZodiac) return '';
+  var stemIdx = stems.indexOf(yearStem);
+  var branchIdx = branches.indexOf(yearBranch);
   
-  var zIdx = zodiacOrder.indexOf(clashedZodiac);
-  var clashedBranch = branches[zIdx];
+  if (stemIdx === -1 || branchIdx === -1) return '';
   
-  // 用60甲子計算：找到最近的該地支年份
+  // 從干支推算年份
   // 甲子年 = 1984年
-  // 從1984年開始，找出所有該地支的年份
+  // 六十甲子序號 = (天干序號 * 12 + 地支序號) % 60 / 2... 不對
+  // 正確算法：循環60年找符合干支的年份
   var ages = [];
   for (var year = 1924; year <= currentYear; year++) {
-    var branchIdx = (year - 4) % 12;
-    if (branchIdx < 0) branchIdx += 12;
-    if (branches[branchIdx] === clashedBranch) {
+    var yStemIdx = (year - 4) % 10;
+    var yBranchIdx = (year - 4) % 12;
+    if (yStemIdx < 0) yStemIdx += 10;
+    if (yBranchIdx < 0) yBranchIdx += 12;
+    if (yStemIdx === stemIdx && yBranchIdx === branchIdx) {
       var age = currentYear - year + 1;
       if (age > 0 && age < 120) {
         ages.push(age);
@@ -1469,9 +1463,8 @@ function getZodiacAge(clashDetail, currentYear) {
     }
   }
   
-  // 返回所有可能的歲數（每12年一循環）
   if (ages.length === 0) return '';
-  return ages.join('、') + '歲';
+  return ages[ages.length - 1] + '歲';
 }
 
 function loadViaScript(y, m) {
@@ -1624,7 +1617,7 @@ function render(d, monthData) {
       <div class="card-title"><span class="icon">沖</span>煞</div>
       <div style="text-align:center;padding:.5rem;">
         <div style="font-size:2rem;font-weight:900;color:var(--red);margin-bottom:.3rem;">沖${d.zodiacClash}</div>
-        <div style="font-size:1rem;color:var(--text-light);">${d.clashDetail} ${getZodiacAge(d.clashDetail, currentDate.getFullYear())}</div>
+        <div style="font-size:1rem;color:var(--text-light);">${d.clashDetail} ${getZodiacAge(d.clashYearGanzhi, currentDate.getFullYear())}</div>
         <div style="font-size:1.2rem;font-weight:700;margin-top:.5rem;">煞${d.clashDirection}</div>
       </div>
     </div>
