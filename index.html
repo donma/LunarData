@@ -403,6 +403,39 @@
     font-weight: 900;
     color: var(--dark-red);
     padding: .5rem;
+    position: relative;
+    cursor: help;
+  }
+  .star-display .tip {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: #fff;
+    padding: .5rem .8rem;
+    border-radius: 6px;
+    font-size: .8rem;
+    z-index: 200;
+    pointer-events: none;
+    line-height: 1.5;
+    max-width: 280px;
+    white-space: normal;
+    text-align: center;
+    font-weight: 400;
+  }
+  .star-display .tip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #333;
+  }
+  .star-display:hover .tip {
+    display: block;
   }
 
   /* Officer */
@@ -562,10 +595,10 @@
   }
   .calendar-header {
     text-align: center;
-    font-size: .7rem;
+    font-size: .75rem;
     font-weight: 700;
     color: var(--text-light);
-    padding: .2rem;
+    padding: .3rem;
   }
   .calendar-day {
     aspect-ratio: 1;
@@ -574,13 +607,14 @@
     align-items: center;
     justify-content: center;
     border-radius: 6px;
-    font-size: .8rem;
+    font-size: .85rem;
     font-weight: 600;
     cursor: pointer;
     transition: all .2s;
     position: relative;
     border: 2px solid transparent;
     min-width: 0;
+    gap: .1rem;
   }
   .calendar-day:hover {
     transform: scale(1.1);
@@ -591,14 +625,25 @@
     box-shadow: 0 0 8px rgba(192,57,43,.3);
   }
   .calendar-day .day-num {
-    font-size: .8rem;
+    font-size: 1rem;
     font-weight: 700;
     line-height: 1;
   }
   .calendar-day .day-lunar {
-    font-size: .5rem;
-    opacity: .8;
+    font-size: .6rem;
+    opacity: .85;
     line-height: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+    color: inherit;
+  }
+  .calendar-day .day-solar-term {
+    font-size: .55rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #E65100;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -684,7 +729,7 @@
   /* Full Month Elements Chart */
   .elements-full-grid {
     display: grid;
-    grid-template-columns: repeat(31, 1fr);
+    grid-template-columns: repeat(16, 1fr);
     gap: 3px;
   }
   .element-day-cell {
@@ -712,7 +757,7 @@
     font-size: .55rem;
     opacity: .8;
   }
-  .el-gold { background: #E0E0E0; color: #424242; }
+  .el-gold { background: #FFF9C4; color: #F57F17; }
   .el-wood { background: #C8E6C9; color: #2E7D32; }
   .el-water { background: #BBDEFB; color: #1565C0; }
   .el-fire { background: #FFCDD2; color: #C62828; }
@@ -849,9 +894,9 @@
     .charts-top { grid-template-columns: 1fr; }
     .full-chart { grid-column: 1; }
     .pie-container { flex-direction: column; align-items: center; }
-    .calendar-day { font-size: .7rem; }
-    .calendar-day .day-num { font-size: .7rem; }
-    .calendar-day .day-lunar { font-size: .45rem; }
+    .calendar-day { font-size: .75rem; }
+    .calendar-day .day-num { font-size: .85rem; }
+    .calendar-day .day-lunar { font-size: .5rem; }
     .calendar-day { font-size: .75rem; }
     .calendar-day .day-num { font-size: .8rem; }
     .calendar-day .day-lunar { font-size: .5rem; }
@@ -1264,6 +1309,48 @@ function getGodExplain(god) {
   return GODS_EXPLAIN[god] || '';
 }
 
+// ============================
+// 二十八宿解釋字典
+// ============================
+const STAR28_EXPLAIN = {
+  // 東方青龍
+  "角木蛟": "東方青龍第一宿，主吉，利嫁娶、出行、建造",
+  "亢金龍": "東方青龍第二宿，凶，忌嫁娶、遠行",
+  "氐土貉": "東方青龍第三宿，凶，忌動土、遠行",
+  "房日兔": "東方青龍第四宿，吉，利嫁娶、開市",
+  "心月狐": "東方青龍第五宿，凶，忌嫁娶、造葬",
+  "尾火虎": "東方青龍第六宿，吉，利嫁娶、造作",
+  "箕水豹": "東方青龍第七宿，吉，利開市、嫁娶",
+  // 北方玄武
+  "斗木獬": "北方玄武第一宿，吉，利建造、嫁娶",
+  "牛金牛": "北方玄武第二宿，凶，忌嫁娶、動土",
+  "女土蝠": "北方玄武第三宿，凶，忌開市、嫁娶",
+  "虛日鼠": "北方玄武第四宿，凶，忌百事",
+  "危月燕": "北方玄武第五宿，凶，忌登高、遠行",
+  "室火豬": "北方玄武第六宿，吉，利建造、嫁娶",
+  "壁水貐": "北方玄武第七宿，吉，利建造、納財",
+  // 西方白虎
+  "奎木狼": "西方白虎第一宿，吉，利開市、遠行",
+  "婁金狗": "西方白虎第二宿，吉，利嫁娶、造葬",
+  "胃土雉": "西方白虎第三宿，吉，利嫁娶、造葬",
+  "昴日雞": "西方白虎第四宿，凶，忌造葬、遠行",
+  "畢月烏": "西方白虎第五宿，吉，利造葬、開市",
+  "觜火猴": "西方白虎第六宿，凶，忌造葬、動土",
+  "參水猿": "西方白虎第七宿，凶，忌造葬、出行",
+  // 南方朱雀
+  "井木犴": "南方朱雀第一宿，吉，利開市、嫁娶",
+  "鬼金羊": "南方朱雀第二宿，凶，忌百事",
+  "柳土獐": "南方朱雀第三宿，凶，忌造葬、開市",
+  "星日馬": "南方朱雀第四宿，凶，忌造葬、開市",
+  "張月鹿": "南方朱雀第五宿，吉，利嫁娶、開市",
+  "翼火蛇": "南方朱雀第六宿，凶，忌造葬、遠行",
+  "軫水蚓": "南方朱雀第七宿，吉，利建造、遠行"
+};
+
+function getStar28Explain(star) {
+  return STAR28_EXPLAIN[star] || '';
+}
+
 function init() {
   const today = new Date();
   const y = today.getFullYear();
@@ -1491,7 +1578,6 @@ function render(d, monthData) {
       <div style="text-align:center;padding:.5rem;">
         <div style="font-size:2rem;font-weight:900;color:var(--red);margin-bottom:.3rem;">沖${d.zodiacClash}</div>
         <div style="font-size:1rem;color:var(--text-light);">${d.clashDetail}</div>
-        <div style="font-size:.85rem;color:var(--text-light);margin-top:.3rem;">${getZodiacAge(d.zodiacClash, currentDate.getFullYear())}</div>
         <div style="font-size:1.2rem;font-weight:700;margin-top:.5rem;">煞${d.clashDirection}</div>
       </div>
     </div>
@@ -1513,7 +1599,10 @@ function render(d, monthData) {
     <!-- 二十八宿 -->
     <div class="card">
       <div class="card-title"><span class="icon">星</span>宿</div>
-      <div class="star-display">${d.twentyEightMansion}</div>
+      <div class="star-display">
+        ${d.twentyEightMansion}
+        ${getStar28Explain(d.twentyEightMansion) ? `<span class="tip">${getStar28Explain(d.twentyEightMansion)}</span>` : ''}
+      </div>
     </div>
 
     <!-- 九星 -->
@@ -1699,11 +1788,22 @@ function renderCalendar(allDays, currentDay) {
       const level = Math.max(0, Math.min(5, day.todayLevel || 0));
       const isToday = day.day === currentDay;
       const lunarDay = day.lunar.dayName;
+      const solarTerm = day.solarTerm ? day.solarTerm.name : '';
+      const isSolarTermStart = day.solarTerm && day.solarTerm.startDate === day.gregorian;
+      
+      // 判斷顯示內容：節氣開始日顯示節氣名，否則顯示農曆
+      let displayText = lunarDay;
+      let displayClass = 'day-lunar';
+      if (isSolarTermStart && solarTerm) {
+        displayText = solarTerm;
+        displayClass = 'day-solar-term';
+      }
+      
       const cls = `level-${level}${isToday ? ' today' : ''}`;
       
-      html += `<div class="calendar-day ${cls}" onclick="changeToDate(${day.day})" title="${day.gregorian}">
+      html += `<div class="calendar-day ${cls}" onclick="changeToDate(${day.day})" title="${day.gregorian} ${solarTerm ? solarTerm : ''}">
         <span class="day-num">${day.day}</span>
-        <span class="day-lunar">${lunarDay}</span>
+        <span class="${displayClass}">${displayText}</span>
       </div>`;
     });
   }
@@ -1798,7 +1898,7 @@ function renderElementsChart(allDays) {
 
 function renderElementsChartFull(allDays) {
   const elColors = {
-    '金': { bg: '#E0E0E0', color: '#424242', cls: 'el-gold' },
+    '金': { bg: '#FFF9C4', color: '#F57F17', cls: 'el-gold' },
     '木': { bg: '#C8E6C9', color: '#2E7D32', cls: 'el-wood' },
     '水': { bg: '#BBDEFB', color: '#1565C0', cls: 'el-water' },
     '火': { bg: '#FFCDD2', color: '#C62828', cls: 'el-fire' },

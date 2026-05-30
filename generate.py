@@ -570,7 +570,7 @@ def generate_day_data(dt):
     star28 = s2t(a.get_the28Stars())
     nine_star = str(a.get_the9FlyStar())
     peng_taboo = s2t(a.get_pengTaboo())
-    nayin = a.get_nayin()
+    nayin = s2t(a.get_nayin())
     five_elements = s2t(a.get_today5Elements())
     fetal_god = s2t(a.get_fetalGod())
 
