@@ -37,8 +37,8 @@ def get_peng_taboo_explain(taboo_text):
         return []
     
     results = []
-    # 用逗號或空格分割
-    parts = taboo_text.replace(',', ' ').split()
+    # 用逗號分割（一個完整的禁忌用逗號分隔）
+    parts = taboo_text.split(',')
     
     for part in parts:
         part = part.strip()
