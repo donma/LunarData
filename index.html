@@ -729,7 +729,7 @@
   /* Full Month Elements Chart */
   .elements-full-grid {
     display: grid;
-    grid-template-columns: repeat(16, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
     gap: 3px;
   }
   .element-day-cell {
@@ -913,7 +913,6 @@
     .chart-card { padding: 1rem; }
     .element-bar { width: 45px; }
     .element-bar-fill { height: 80px; }
-    .elements-full-grid { grid-template-columns: repeat(15, 1fr); }
   }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&display=swap" rel="stylesheet">
@@ -1433,37 +1432,33 @@ function updateUrl() {
 }
 
 function getZodiacAge(clashDetail, currentYear) {
-  // 從 clashDetail 中提取被沖的生肖
-  const zodiacOrder = ['鼠','牛','虎','兔','龍','蛇','馬','羊','猴','雞','狗','豬'];
-  const s2t = {'龙':'龍','蛇':'蛇','马':'馬','羊':'羊','猴':'猴','鸡':'雞','狗':'狗','猪':'豬','鼠':'鼠','牛':'牛','虎':'虎','兔':'兔'};
+  var zodiacOrder = ['鼠','牛','虎','兔','龍','蛇','馬','羊','猴','雞','狗','豬'];
+  var clashedZodiac = '';
   
-  let clashedZodiac = '';
-  for (const z of zodiacOrder) {
-    if (clashDetail.includes(z)) {
-      clashedZodiac = z;
-    }
-  }
-  for (const [s, t] of Object.entries(s2t)) {
-    if (clashDetail.includes(s)) {
-      clashedZodiac = t;
+  // 從"沖X"格式提取生肖
+  var idx = clashDetail.indexOf('沖');
+  if (idx === -1) idx = clashDetail.indexOf('冲');
+  if (idx >= 0) {
+    var after = clashDetail.substring(idx + 1);
+    for (var i = 0; i < zodiacOrder.length; i++) {
+      if (after.indexOf(zodiacOrder[i]) >= 0) {
+        clashedZodiac = zodiacOrder[i];
+        break;
+      }
     }
   }
   
   if (!clashedZodiac) return '';
   
-  const zIdx = zodiacOrder.indexOf(clashedZodiac);
-  if (zIdx === -1) return '';
+  var zIdx = zodiacOrder.indexOf(clashedZodiac);
   
-  // 計算最近的該生肖年份
-  // 2020年是鼠年（index 0）
-  // 所以 zodiac index 為 z 的年份 = 2020 + z (mod 12 調整)
-  let birthYear = 2020 + zIdx;
+  // 2020年是鼠年(index 0)
+  var birthYear = 2020 + zIdx;
   while (birthYear > currentYear) {
     birthYear -= 12;
   }
   
-  // 虛歲 = 當前年 - 出生年 + 1
-  const age = currentYear - birthYear + 1;
+  var age = currentYear - birthYear + 1;
   return age + '歲';
 }
 
