@@ -1548,6 +1548,63 @@ function loadViaScript(y, m) {
   });
 }
 
+let holidaysData = null;
+
+async function loadHolidays() {
+  if (holidaysData) return holidaysData;
+  try {
+    const bust = Date.now();
+    const base = getBasePath();
+    const script = document.createElement('script');
+    script.src = `${base}assets/holidays.js?v=${bust}`;
+    return new Promise((resolve) => {
+      script.onload = function() {
+        holidaysData = window.HolidaysData || [];
+        document.head.removeChild(script);
+        resolve(holidaysData);
+      };
+      script.onerror = function() {
+        document.head.removeChild(script);
+        resolve([]);
+      };
+      document.head.appendChild(script);
+    });
+  } catch(e) {
+    return [];
+  }
+}
+
+function getHolidaysForDate(month, day) {
+  if (!holidaysData) return [];
+  return holidaysData.filter(h => h.month === month && h.day === day);
+}
+
+function renderHolidays(dt) {
+  const month = dt.getMonth() + 1;
+  const day = dt.getDate();
+  const holidays = getHolidaysForDate(month, day);
+  
+  if (holidays.length === 0) return '';
+  
+  return `
+    <div class="card full" style="margin-bottom:1.5rem;">
+      <div class="card-title"><span class="icon">📅</span> 今日節日</div>
+      <div class="deity-list">
+        ${holidays.map(h => `
+          <div class="deity-item" onclick="this.querySelector('.deity-detail').classList.toggle('show')" style="cursor:pointer;">
+            <div style="font-weight:700;font-size:1.1rem;">${h.emoji} ${h.name}</div>
+            ${h.englishName ? `<div style="font-size:.8rem;color:var(--text-light);">${h.englishName}</div>` : ''}
+            <div class="deity-detail">
+              <div style="margin-top:.5rem;font-size:.85rem;color:var(--text);line-height:1.6;">${h.story}</div>
+              ${h.category ? `<div style="margin-top:.5rem;font-size:.75rem;color:var(--text-light);">分類：${h.category}</div>` : ''}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
 async function loadData() {
   const app = document.getElementById('app');
   app.innerHTML = '<div class="loading"><div class="spinner"></div>載入中...</div>';
@@ -1557,6 +1614,7 @@ async function loadData() {
   const d = currentDate.getDate();
 
   try {
+    await loadHolidays();
     const data = await loadViaScript(y, m);
     if (!data || !data.days) throw new Error('資料格式錯誤');
     const dayData = data.days.find(day => day.day === d);
@@ -1599,6 +1657,9 @@ function render(d, monthData) {
       ${d.deityBirthday.length ? d.deityBirthday.map(b => `<span class="tag">${b}</span>`).join('') : ''}
     </div>
   </div>
+
+  <!-- 西曆節日 -->
+  <div id="holiday-section"></div>
 
   <!-- 圖表區域 -->
   <div class="charts-section charts-top">
@@ -1910,6 +1971,10 @@ function render(d, monthData) {
   </div>`;
 
   document.getElementById('app').innerHTML = html;
+  
+  // 渲染節日
+  const holidayHtml = renderHolidays(currentDate);
+  document.getElementById('holiday-section').innerHTML = holidayHtml;
 }
 
 function renderNineStar(str) {
