@@ -1440,6 +1440,42 @@ function getZodiacImage(zodiac) {
   return map[zodiac] || 'dragon.png';
 }
 
+function getZodiacFromBranch(branch) {
+  const map = {
+    '子': '鼠', '丑': '牛', '寅': '虎', '卯': '兔',
+    '辰': '龍', '巳': '蛇', '午': '馬', '未': '羊',
+    '申': '猴', '酉': '雞', '戌': '狗', '亥': '豬'
+  };
+  return map[branch] || '';
+}
+
+function getZodiacEmoji(zodiac) {
+  const map = {
+    '水瓶座': '♒', '雙魚座': '♓', '白羊座': '♈', '金牛座': '♉',
+    '雙子座': '♊', '巨蟹座': '♋', '獅子座': '♌', '處女座': '♍',
+    '天秤座': '♎', '天蠍座': '♏', '射手座': '♐', '摩羯座': '♑'
+  };
+  return map[zodiac] || '⭐';
+}
+
+function getSeasonDesc(season) {
+  const map = {
+    '孟春': '初春乍暖，萬物萌發',
+    '仲春': '春暖花開，生機盎然',
+    '季春': '暮春時節，穀雨前後',
+    '孟夏': '初夏時節，氣溫漸升',
+    '仲夏': '盛夏炎炎，萬物繁茂',
+    '季夏': '夏末暑熱，秋涼將至',
+    '孟秋': '初秋涼爽，收穫將至',
+    '仲秋': '秋高氣爽，月圓人圓',
+    '季秋': '深秋蕭瑟，寒露霜降',
+    '孟冬': '初冬微寒，萬物收藏',
+    '仲冬': '寒冬臘月，數九寒天',
+    '季冬': '歲末年終，辭舊迎新'
+  };
+  return map[season] || '';
+}
+
 function getZodiacAge(clashYearGanzhi, currentYear) {
   if (!clashYearGanzhi || clashYearGanzhi.length < 2) return '';
   
@@ -1624,14 +1660,14 @@ function render(d, monthData) {
 
     <!-- 沖煞 -->
     <div class="card" style="position:relative;overflow:hidden;">
-      <div style="position:absolute;top:0;left:0;bottom:0;width:40%;opacity:0.06;background-image:url('assets/zodiac/${getZodiacImage(d.lunar.zodiac)}');background-size:contain;background-repeat:no-repeat;background-position:left center;pointer-events:none;"></div>
+      <div style="position:absolute;top:0;left:0;bottom:0;width:40%;opacity:0.06;background-image:url('assets/zodiac/${getZodiacFromBranch(d.dayGanzhi.branch)}');background-size:contain;background-repeat:no-repeat;background-position:left center;pointer-events:none;"></div>
       <div style="position:absolute;top:0;right:0;bottom:0;width:40%;opacity:0.06;background-image:url('assets/zodiac/${getZodiacImage(d.zodiacClash)}');background-size:contain;background-repeat:no-repeat;background-position:right center;pointer-events:none;"></div>
       <div class="card-title"><span class="icon">沖</span>煞</div>
       <div style="text-align:center;padding:.8rem;position:relative;">
         <div style="display:flex;align-items:center;justify-content:center;gap:1.5rem;margin-bottom:.5rem;">
           <div style="text-align:center;">
-            <div style="font-size:1.8rem;font-weight:900;">${d.lunar.zodiac}</div>
-            <div style="font-size:.7rem;color:var(--text-light);">日支</div>
+            <div style="font-size:1.8rem;font-weight:900;">${getZodiacFromBranch(d.dayGanzhi.branch)}</div>
+            <div style="font-size:.7rem;color:var(--text-light);">日支 ${d.dayGanzhi.branch}</div>
           </div>
           <div style="font-size:2rem;color:var(--red);">⟷</div>
           <div style="text-align:center;">
@@ -1813,6 +1849,7 @@ function render(d, monthData) {
     <div class="card">
       <div class="card-title"><span class="icon">季</span>節</div>
       <div class="peng-text" style="font-size:1.5rem;font-weight:900;">${d.season}</div>
+      <div style="font-size:.85rem;color:var(--text-light);text-align:center;margin-top:.3rem;">${getSeasonDesc(d.season)}</div>
     </div>
 
     <!-- 五行 -->
@@ -1852,6 +1889,7 @@ function render(d, monthData) {
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;">
         <div style="text-align:center;padding:.8rem;background:#F3E5F5;border-radius:8px;">
           <div style="font-size:.75rem;color:#7B1FA2;font-weight:700;">西方星座</div>
+          <div style="font-size:1.8rem;">${getZodiacEmoji(d.westernZodiac)}</div>
           <div style="font-size:1.3rem;font-weight:900;color:#4A148C;">${d.westernZodiac}</div>
         </div>
         <div style="text-align:center;padding:.8rem;background:#E3F2FD;border-radius:8px;">
