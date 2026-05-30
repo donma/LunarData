@@ -1405,20 +1405,24 @@ function getZodiacAge(zodiac, currentYear) {
   const idx = zodiacOrder.indexOf(zodiac);
   if (idx === -1) return '';
   
-  // 計算最近幾個該生肖的年份和歲數
+  // 計算該生肖在本世紀的年份，然後算虛歲
+  // 虛歲 = 當前年 - 出生年 + 1
   const ages = [];
-  // 本命年（最近的）
-  let birthYear = currentYear - ((currentYear - 1900 - idx) % 12);
+  // 從最近的年份開始往回推
+  let birthYear = currentYear - ((currentYear - 2020 + idx) % 12);
   if (birthYear > currentYear) birthYear -= 12;
+  if (birthYear < 1900) birthYear += 12;
   
-  for (let i = 0; i < 3; i++) {
+  // 計算3個不同世代的虛歲
+  for (let i = 0; i < 4; i++) {
     const y = birthYear - (i * 12);
-    if (y > 1900) {
-      ages.push(`${currentYear - y}歲`);
+    if (y >= 1924) { // 合理範圍
+      const age = currentYear - y + 1; // 虛歲
+      ages.push(age);
     }
   }
   
-  return `(${ages.join('、')})`;
+  return ages.join('、') + '歲';
 }
 
 function changeToDate(day) {
@@ -1578,6 +1582,7 @@ function render(d, monthData) {
       <div style="text-align:center;padding:.5rem;">
         <div style="font-size:2rem;font-weight:900;color:var(--red);margin-bottom:.3rem;">沖${d.zodiacClash}</div>
         <div style="font-size:1rem;color:var(--text-light);">${d.clashDetail}</div>
+        <div style="font-size:.85rem;color:var(--text-light);margin-top:.3rem;">虛歲 ${getZodiacAge(d.zodiacClash, currentDate.getFullYear())}</div>
         <div style="font-size:1.2rem;font-weight:700;margin-top:.5rem;">煞${d.clashDirection}</div>
       </div>
     </div>
@@ -1599,9 +1604,9 @@ function render(d, monthData) {
     <!-- 二十八宿 -->
     <div class="card">
       <div class="card-title"><span class="icon">星</span>宿</div>
-      <div class="star-display">
-        ${d.twentyEightMansion}
-        ${getStar28Explain(d.twentyEightMansion) ? `<span class="tip">${getStar28Explain(d.twentyEightMansion)}</span>` : ''}
+      <div style="text-align:center;">
+        <div class="star-display">${d.twentyEightMansion}</div>
+        ${getStar28Explain(d.twentyEightMansion) ? `<div style="font-size:.8rem;color:var(--text-light);margin-top:.3rem;line-height:1.6;">${getStar28Explain(d.twentyEightMansion)}</div>` : ''}
       </div>
     </div>
 
