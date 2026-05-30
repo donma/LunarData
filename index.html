@@ -558,14 +558,14 @@
   .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 4px;
+    gap: 3px;
   }
   .calendar-header {
     text-align: center;
-    font-size: .75rem;
+    font-size: .7rem;
     font-weight: 700;
     color: var(--text-light);
-    padding: .3rem;
+    padding: .2rem;
   }
   .calendar-day {
     aspect-ratio: 1;
@@ -573,13 +573,14 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border-radius: 8px;
-    font-size: .85rem;
+    border-radius: 6px;
+    font-size: .8rem;
     font-weight: 600;
     cursor: pointer;
     transition: all .2s;
     position: relative;
     border: 2px solid transparent;
+    min-width: 0;
   }
   .calendar-day:hover {
     transform: scale(1.1);
@@ -590,12 +591,18 @@
     box-shadow: 0 0 8px rgba(192,57,43,.3);
   }
   .calendar-day .day-num {
-    font-size: .9rem;
+    font-size: .8rem;
     font-weight: 700;
+    line-height: 1;
   }
   .calendar-day .day-lunar {
-    font-size: .55rem;
+    font-size: .5rem;
     opacity: .8;
+    line-height: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
   }
   .level-1 { background: #E8F5E9; color: #388E3C; }
   .level-2 { background: #F1F8E9; color: #689F38; }
@@ -842,6 +849,9 @@
     .charts-top { grid-template-columns: 1fr; }
     .full-chart { grid-column: 1; }
     .pie-container { flex-direction: column; align-items: center; }
+    .calendar-day { font-size: .7rem; }
+    .calendar-day .day-num { font-size: .7rem; }
+    .calendar-day .day-lunar { font-size: .45rem; }
     .calendar-day { font-size: .75rem; }
     .calendar-day .day-num { font-size: .8rem; }
     .calendar-day .day-lunar { font-size: .5rem; }
