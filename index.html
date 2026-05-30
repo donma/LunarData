@@ -54,36 +54,39 @@
   .date-bar {
     background: #fff;
     border-bottom: 2px solid var(--border);
-    padding: 1rem;
+    padding: .6rem .8rem;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: .8rem;
-    flex-wrap: wrap;
+    gap: .4rem;
+    flex-wrap: nowrap;
     position: sticky;
     top: 0;
     z-index: 100;
     box-shadow: var(--shadow);
   }
-  .date-bar label { font-weight: 700; color: var(--red); }
+  .date-bar label { font-weight: 700; color: var(--red); display: none; }
   .date-bar input[type="date"] {
-    font-size: 1rem;
-    padding: .5rem 1rem;
+    font-size: .95rem;
+    padding: .45rem .6rem;
     border: 2px solid var(--border);
     border-radius: 8px;
     font-family: inherit;
     cursor: pointer;
     transition: border-color .2s;
+    flex: 1;
+    min-width: 0;
   }
   .date-bar input:focus { border-color: var(--red); outline: none; }
   .date-bar button {
-    padding: .5rem 1.2rem;
+    padding: .45rem .8rem;
     border: none;
     border-radius: 8px;
-    font-size: 1rem;
+    font-size: .95rem;
     font-family: inherit;
     cursor: pointer;
     transition: all .2s;
+    white-space: nowrap;
   }
   .btn-today {
     background: var(--red);
@@ -94,8 +97,9 @@
     background: #fff;
     border: 2px solid var(--border) !important;
     color: var(--text);
-    font-size: 1.2rem !important;
-    padding: .5rem .8rem !important;
+    font-size: 1.1rem !important;
+    padding: .45rem .6rem !important;
+    flex-shrink: 0;
   }
   .btn-nav:hover { background: var(--bg); border-color: var(--red) !important; }
 
@@ -487,8 +491,9 @@
     .hours-grid { grid-template-columns: repeat(4, 1fr); }
     .direction-grid { grid-template-columns: 1fr; }
     .gods-grid { grid-template-columns: 1fr; }
-    .date-bar { gap: .5rem; }
-    .date-bar input[type="date"] { width: 100%; }
+    .date-bar { padding: .5rem; gap: .3rem; }
+    .date-bar input[type="date"] { font-size: .85rem; padding: .4rem .5rem; }
+    .date-bar button { padding: .4rem .6rem; font-size: .85rem; }
   }
   @media (max-width: 480px) {
     .container { padding: 1rem .5rem; }
@@ -498,6 +503,7 @@
     .hours-grid { grid-template-columns: repeat(3, 1fr); }
     .ninestar-cell { width: 2rem; height: 2rem; font-size: .9rem; }
     .officer-main .name { font-size: 1.6rem; }
+    .date-bar { padding: .4rem; }
   }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&display=swap" rel="stylesheet">
