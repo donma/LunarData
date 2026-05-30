@@ -1802,6 +1802,46 @@ function render(d, monthData) {
       </div>
     </div>
 
+    <!-- 每日吉凶 -->
+    <div class="card">
+      <div class="card-title"><span class="icon">每</span>日吉凶</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;">
+        <div style="background:#E8F5E9;padding:.6rem;border-radius:8px;">
+          <div style="font-size:.75rem;color:#2E7D32;font-weight:700;margin-bottom:.3rem;">吉色</div>
+          <div style="font-size:.9rem;">${d.luckyColors.join('、')}</div>
+        </div>
+        <div style="background:#FFEBEE;padding:.6rem;border-radius:8px;">
+          <div style="font-size:.75rem;color:#C62828;font-weight:700;margin-bottom:.3rem;">忌色</div>
+          <div style="font-size:.9rem;">${d.unluckyColors.join('、')}</div>
+        </div>
+        <div style="background:#E8F5E9;padding:.6rem;border-radius:8px;">
+          <div style="font-size:.75rem;color:#2E7D32;font-weight:700;margin-bottom:.3rem;">吉數</div>
+          <div style="font-size:1.2rem;font-weight:900;">${d.luckyNumbers.join('、')}</div>
+        </div>
+        <div style="background:#FFEBEE;padding:.6rem;border-radius:8px;">
+          <div style="font-size:.75rem;color:#C62828;font-weight:700;margin-bottom:.3rem;">忌數</div>
+          <div style="font-size:1.2rem;font-weight:900;">${d.unluckyNumbers.join('、')}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 星座與月相 -->
+    <div class="card">
+      <div class="card-title"><span class="icon">星</span>座與月相</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;">
+        <div style="text-align:center;padding:.8rem;background:#F3E5F5;border-radius:8px;">
+          <div style="font-size:.75rem;color:#7B1FA2;font-weight:700;">西方星座</div>
+          <div style="font-size:1.3rem;font-weight:900;color:#4A148C;">${d.westernZodiac}</div>
+        </div>
+        <div style="text-align:center;padding:.8rem;background:#E3F2FD;border-radius:8px;">
+          <div style="font-size:.75rem;color:#1565C0;font-weight:700;">月相</div>
+          <div style="font-size:1.8rem;">${d.moonPhase.symbol}</div>
+          <div style="font-size:1rem;font-weight:700;color:#0D47A1;">${d.moonPhase.name}</div>
+          <div style="font-size:.7rem;color:#1976D2;">${d.moonPhase.desc}</div>
+        </div>
+      </div>
+    </div>
+
   </div>`;
 
   document.getElementById('app').innerHTML = html;

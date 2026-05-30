@@ -450,6 +450,50 @@ def get_branch_index(branch):
     return EARTHLY_BRANCHES.index(branch)
 
 
+def get_western_zodiac(month, day):
+    """取得西方星座"""
+    dates = [(1,20),(2,19),(3,21),(4,20),(5,21),(6,22),(7,23),(8,23),(9,23),(10,24),(11,23),(12,22)]
+    signs = ['水瓶座','雙魚座','白羊座','金牛座','雙子座','巨蟹座','獅子座','處女座','天秤座','天蠍座','射手座','摩羯座']
+    idx = 0
+    for i, (m, d) in enumerate(dates):
+        if month == m and day < d:
+            idx = i
+            break
+        elif month == m and day >= d:
+            idx = (i + 1) % 12
+            break
+    else:
+        if month == 12 and day >= 22:
+            idx = 0
+        else:
+            idx = 11
+    return signs[idx]
+
+def get_moon_phase(lunar_day):
+    """取得月相"""
+    if lunar_day == 1:
+        return {"name": "朔月", "symbol": "🌑", "desc": "新月，月球位於太陽與地球之間"}
+    elif 2 <= lunar_day <= 6:
+        return {"name": "蛾眉月", "symbol": "🌒", "desc": "月牙漸盈，適合許願祈福"}
+    elif lunar_day == 7 or lunar_day == 8:
+        return {"name": "上弦月", "symbol": "🌓", "desc": "月圓一半，適合執行計劃"}
+    elif 9 <= lunar_day <= 13:
+        return {"name": "盈凸月", "symbol": "🌔", "desc": "月圓將至，適合收穫成果"}
+    elif lunar_day == 14:
+        return {"name": "望前夕", "symbol": "🌔", "desc": "月圓前夕，適合準備慶祝"}
+    elif lunar_day == 15:
+        return {"name": "望月", "symbol": "🌕", "desc": "滿月，月圓人團圓"}
+    elif lunar_day == 16:
+        return {"name": "既望", "symbol": "🌕", "desc": "月圓剛過，適合反思總結"}
+    elif 17 <= lunar_day <= 21:
+        return {"name": "虧凸月", "symbol": "🌖", "desc": "月漸虧，適合收斂內省"}
+    elif lunar_day == 22 or lunar_day == 23:
+        return {"name": "下弦月", "symbol": "🌗", "desc": "月圓一半，適合放下執念"}
+    elif 24 <= lunar_day <= 29:
+        return {"name": "殘月", "symbol": "🌘", "desc": "月牙漸消，適合除舊佈新"}
+    else:
+        return {"name": "晦日", "symbol": "🌑", "desc": "月末，適合總結反省"}
+
 def get_solar_term_info(dt, solar_terms_dict):
     """取得當前所處節氣資訊"""
     sorted_terms = sorted(solar_terms_dict.items(), key=lambda x: (x[1][0], x[1][1]))
@@ -694,6 +738,39 @@ def generate_day_data(dt):
     is_yellow = "黃道" in is_yellow_road if is_yellow_road else False
     week_day = s2t(a.get_weekDayCn())
 
+    # 每日吉凶顏色（依據日干五行）
+    color_map = {
+        '木': {'good': ['綠色', '青色', '翠色'], 'bad': ['白色', '銀色']},
+        '火': {'good': ['紅色', '紫色', '橙色'], 'bad': ['黑色', '藍色']},
+        '土': {'good': ['黃色', '棕色', '咖啡色'], 'bad': ['綠色', '青色']},
+        '金': {'good': ['白色', '銀色', '金色'], 'bad': ['紅色', '紫色']},
+        '水': {'good': ['黑色', '藍色', '灰色'], 'bad': ['黃色', '棕色']}
+    }
+    day_element = ''
+    if day_stem in ['甲','乙']: day_element = '木'
+    elif day_stem in ['丙','丁']: day_element = '火'
+    elif day_stem in ['戊','己']: day_element = '土'
+    elif day_stem in ['庚','辛']: day_element = '金'
+    elif day_stem in ['壬','癸']: day_element = '水'
+    
+    colors = color_map.get(day_element, {'good': [], 'bad': []})
+    
+    # 每日吉凶數字（依據日干五行）
+    number_map = {
+        '木': {'good': ['3', '8'], 'bad': ['4', '9']},
+        '火': {'good': ['2', '7'], 'bad': ['1', '6']},
+        '土': {'good': ['5', '10'], 'bad': ['3', '8']},
+        '金': {'good': ['4', '9'], 'bad': ['2', '7']},
+        '水': {'good': ['1', '6'], 'bad': ['5', '10']}
+    }
+    numbers = number_map.get(day_element, {'good': [], 'bad': []})
+    
+    # 每日星座（西方星座）
+    zodiac_western = get_western_zodiac(dt.month, dt.day)
+    
+    # 月相
+    moon_phase = get_moon_phase(lunar_day)
+
     result = {
         "day": dt.day,
         "gregorian": dt.strftime("%Y-%m-%d"),
@@ -755,7 +832,13 @@ def generate_day_data(dt):
         "fetalGod": fetal_god,
         "todayLevel": today_level,
         "todayLevelName": today_level_name,
-        "isYellowRoad": is_yellow
+        "isYellowRoad": is_yellow,
+        "luckyColors": colors.get('good', []),
+        "unluckyColors": colors.get('bad', []),
+        "luckyNumbers": numbers.get('good', []),
+        "unluckyNumbers": numbers.get('bad', []),
+        "westernZodiac": zodiac_western,
+        "moonPhase": moon_phase
     }
 
     return result
