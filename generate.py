@@ -569,6 +569,40 @@ def get_deity_info(deity_name):
     return DEITY_INFO.get(deity_name, None)
 
 
+def is_tianshe_day(dt, day_stem, day_branch):
+    """判斷是否為天赦日
+    春季（立春後）：戊寅日
+    夏季（立夏後）：甲午日
+    秋季（立秋後）：戊申日
+    冬季（立冬後）：甲子日
+    """
+    month = dt.month
+    day = dt.day
+    
+    # 簡化判斷：根據月份判斷季節
+    # 春季：2-4月，夏：5-7月，秋：8-10月，冬：11-1月
+    if 2 <= month <= 4:
+        season = 'spring'
+    elif 5 <= month <= 7:
+        season = 'summer'
+    elif 8 <= month <= 10:
+        season = 'autumn'
+    else:
+        season = 'winter'
+    
+    # 天赦日條件
+    if season == 'spring' and day_stem == '戊' and day_branch == '寅':
+        return True
+    elif season == 'summer' and day_stem == '甲' and day_branch == '午':
+        return True
+    elif season == 'autumn' and day_stem == '戊' and day_branch == '申':
+        return True
+    elif season == 'winter' and day_stem == '甲' and day_branch == '子':
+        return True
+    
+    return False
+
+
 def get_clash_zodiac(clash_str):
     """從沖煞字串提取被沖的生肖
     格式: "X日沖Y" 或 "X日冲Y"，Y 是被沖的生肖
@@ -751,6 +785,13 @@ def generate_day_data(dt):
     year_branch = year8[1] if len(year8) > 1 else ""
     month_stem = month8[0] if month8 else ""
     month_branch = month8[1] if len(month8) > 1 else ""
+
+    # 天赦日檢查
+    tianshe_info = None
+    if is_tianshe_day(dt, day_stem, day_branch):
+        tianshe_info = {"name": "天赦日", "info": get_deity_info("天赦日")}
+        deity_details.insert(0, tianshe_info)
+        deity_birthdays.insert(0, "天赦日")
 
     zodiac = zodiac_to_traditional(a.get_chineseYearZodiac())
     month_cn = s2t(a.lunarMonthCn)
