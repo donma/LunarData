@@ -1431,24 +1431,6 @@ function updateUrl() {
     // file:// 協議不支援 URL 更新，忽略
   }
 }
-}
-
-function changeDate(delta) {
-  currentDate.setDate(currentDate.getDate() + delta);
-  document.getElementById('dateInput').value = formatDate(currentDate);
-  loadData();
-}
-
-function goToday() {
-  const today = new Date();
-  if (today.getFullYear() >= 1970 && today.getFullYear() <= 2100) {
-    currentDate = today;
-  } else {
-    currentDate = new Date(2026, 4, 30);
-  }
-  document.getElementById('dateInput').value = formatDate(currentDate);
-  loadData();
-}
 
 function getZodiacAge(clashDetail, currentYear) {
   // 從 clashDetail 中提取被沖的生肖
@@ -1483,12 +1465,6 @@ function getZodiacAge(clashDetail, currentYear) {
   // 虛歲 = 當前年 - 出生年 + 1
   const age = currentYear - birthYear + 1;
   return age + '歲';
-}
-
-function changeToDate(day) {
-  currentDate.setDate(day);
-  document.getElementById('dateInput').value = formatDate(currentDate);
-  loadData();
 }
 
 function loadViaScript(y, m) {
