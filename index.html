@@ -1660,7 +1660,7 @@ function render(d, monthData) {
 
     <!-- 沖煞 -->
     <div class="card" style="position:relative;overflow:hidden;">
-      <div style="position:absolute;top:0;left:0;bottom:0;width:40%;opacity:0.06;background-image:url('assets/zodiac/${getZodiacFromBranch(d.dayGanzhi.branch)}');background-size:contain;background-repeat:no-repeat;background-position:left center;pointer-events:none;"></div>
+      <div style="position:absolute;top:0;left:0;bottom:0;width:40%;opacity:0.06;background-image:url('assets/zodiac/${getZodiacImage(getZodiacFromBranch(d.dayGanzhi.branch))}');background-size:contain;background-repeat:no-repeat;background-position:left center;pointer-events:none;"></div>
       <div style="position:absolute;top:0;right:0;bottom:0;width:40%;opacity:0.06;background-image:url('assets/zodiac/${getZodiacImage(d.zodiacClash)}');background-size:contain;background-repeat:no-repeat;background-position:right center;pointer-events:none;"></div>
       <div class="card-title"><span class="icon">沖</span>煞</div>
       <div style="text-align:center;padding:.8rem;position:relative;">
