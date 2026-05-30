@@ -3,22 +3,22 @@
 > 整合農曆、干支、節氣、宜忌、吉時、神明誕辰、彭祖百忌、九宮飛星與多種傳統曆法資訊，純前端即可查詢。
 >
 > 「我願稱之目前地表最強農民曆」
->
-> 線上展示：**https://donma.github.io/LunarData/**
+
+**[線上展示](https://donma.github.io/LunarData/)**
 
 ## 功能特色
 
 ### 黃曆核心
 - 農曆 / 國曆轉換
 - 天干地支（年柱、月柱、日柱）
-- 生肖、沖煞方位、虛歲
+- 生肖、沖煞方位、虛歲（依六十甲子精確計算）
 - 二十四節氣（含白話註解）
 - 宜 / 忌（含白話解釋 tooltip）
 - 吉時 / 凶時（含時辰干支）
 - 建除十二神
 - 二十八宿（日宿法 + 月宿法雙算法）
-- 九宮飛星
-- 彭祖百忌（含幽默白話文解釋，如「甲日別亂開錢包借錢給人，否則錢財跟你說掰掰」）
+- 九宮飛星（點擊進入詳解頁）
+- 彭祖百忌（含幽默白話文解釋）
 - 神明誕辰（130 位神明，含小知識介紹）
 
 ### 三派擇日
@@ -90,6 +90,7 @@ LunarData/
 ├── index.html              ← 主頁（黃曆查詢）
 ├── ninestar.html           ← 九宮飛星詳解
 ├── README.md               ← 本說明文件
+├── LICENSE                 ← MIT 授權
 ├── .gitignore
 │
 ├── generate.py             ← 資料產出腳本（僅開發用）
@@ -98,39 +99,24 @@ LunarData/
 ├── verify_300.py           ← 三派宜忌驗證（僅開發用）
 ├── verify_new.py           ← 新功能驗證（僅開發用）
 ├── verify_full.py          ← 完整驗證（僅開發用）
+├── verify_tianshe.py       ← 天赦日驗證（僅開發用）
 ├── sanpai.py               ← 三派宜忌對照表
 ├── solar_term_desc.py      ← 節氣註解資料庫
+├── peng_taboo.py           ← 彭祖百忌白話解釋
 ├── deity_info.json         ← 神明知識資料庫（130位）
 │
 ├── assets/
-│   └── zodiac/             ← 十二生肖圖片
-│       ├── rat.png         ← 鼠
-│       ├── ox.png          ← 牛
-│       ├── tiger.png       ← 虎
-│       ├── rabbit.png      ← 兔
-│       ├── dragon.png      ← 龍
-│       ├── snake.png       ← 蛇
-│       ├── horse.png       ← 馬
-│       ├── sheep.png       ← 羊
-│       ├── monkey.png      ← 猴
-│       ├── rooster.png     ← 雞
-│       ├── dog.png         ← 狗
-│       └── pig.png         ← 豬
+│   ├── zodiac/             ← 十二生肖圖片
+│   │   ├── rat.png ~ pig.png
+│   ├── holidays.json       ← 西曆節日資料庫（93個）
+│   └── holidays.js         ← 西曆節日 JS 版
 │
-├── 1970/                   ← 年份資料夾
-│   ├── 01.json             ← 1月 JSON 資料
-│   ├── 01.js               ← 1月 JS 資料（供前端載入）
-│   ├── ...
-│   └── 12.js
-├── 1971/
-│   └── ...
-└── 2100/
-    └── 01.js
+├── 1970/ ~ 2100/           ← 年份資料夾
+│   ├── 01.json ~ 12.json   ← 月 JSON 資料
+│   └── 01.js ~ 12.js       ← 月 JS 資料
 ```
 
 ## JSON 欄位說明
-
-每日資料包含以下欄位：
 
 | 欄位 | 類型 | 說明 |
 |------|------|------|
@@ -141,8 +127,8 @@ LunarData/
 | `dayGanzhi` | object | 日干支（天干、地支、干支、納音） |
 | `monthGanzhi` | object | 月干支 |
 | `zodiacClash` | string | 沖煞生肖 |
-| `clashDirection` | string | 煞方位 |
-| `clashYearGanzhi` | string | 被沖年份干支 |
+| `clashDirection` | string | 煞方位（依日地支計算） |
+| `clashYearGanzhi` | string | 被沖年份干支（六十甲子精確計算） |
 | `solarTerm` | object | 節氣（名稱、起訖日、註解） |
 | `season` | string | 節季（孟春、仲春...） |
 | `deityBirthday` | array | 神明誕辰列表 |
@@ -152,6 +138,7 @@ LunarData/
 | `twentyEightMansion_month` | string | 二十八宿（月宿法） |
 | `nineStar` | string | 九宮飛星 |
 | `pengTaboo` | string | 彭祖百忌 |
+| `pengTabooExplain` | array | 彭祖百忌白話解釋 |
 | `fiveElements` | array | 五行資訊 |
 | `auspicious` | array | 宜 |
 | `inauspicious` | array | 忌 |
@@ -202,6 +189,58 @@ fetch('2026/05.js')
   });
 ```
 
+## 驗證報告
+
+### 沖煞驗證（100 筆抽樣）
+
+| 項目 | 結果 |
+|------|------|
+| 沖煞生肖 | ✅ 100% |
+| 煞方位 | ✅ 100% |
+| 被沖年干支 | ✅ 100% |
+| 虛歲計算 | ✅ 100% |
+
+### 三派宜忌驗證（300 組）
+
+| 派系 | 宜 | 忌 |
+|------|-----|-----|
+| 建除十二神派 | ✅ 100% | ✅ 100% |
+| 天星擇日派 | ✅ 100% | ✅ 100% |
+| 紫白九星派 | ✅ 100% | ✅ 100% |
+
+### 新功能驗證（100 筆抽樣）
+
+| 項目 | 結果 |
+|------|------|
+| 西方星座 | ✅ 100% |
+| 月相 | ✅ 100% |
+| 吉凶顏色 | ✅ 100% |
+| 吉凶數字 | ✅ 100% |
+
+### 天赦日驗證（11 年，67 天）
+
+| 年份 | 天數 | 結果 |
+|------|------|------|
+| 2025 | 6 | ✅ 全部通過 |
+| 2026 | 6 | ✅ 全部通過 |
+| 2027 | 6 | ✅ 全部通過 |
+| 其他 8 年 | 49 | ✅ 全部通過 |
+
+規則：春戊寅、夏甲午、秋戊申、冬甲子
+
+### 網路黃曆比對
+
+| 日期 | 項目 | 線上 | 我們 | 結果 |
+|------|------|------|------|------|
+| 2026-05-30 | 日干支 | 甲辰 | 甲辰 | ✅ |
+| 2026-05-30 | 沖煞 | 沖狗煞南 | 沖狗煞南 | ✅ |
+| 2026-05-30 | 虛歲 | 戊戌69歲 | 69歲 | ✅ |
+| 2026-06-08 | 日干支 | - | 癸丑 | ✅ |
+| 2026-06-08 | 沖煞 | 沖羊煞東 | 沖羊煞東 | ✅ |
+| 2026-06-08 | 虛歲 | 丁未60歲 | 60歲 | ✅ |
+| 2024-05-30 | 天赦日 | 甲午 | 甲午 | ✅ |
+| 2026-03-05 | 天赦日 | 戊寅 | 戊寅 | ✅ |
+
 ## 技術架構
 
 | 項目 | 技術 |
@@ -211,34 +250,7 @@ fetch('2026/05.js')
 | 農曆計算 | Python `cnlunar` 函式庫 |
 | 圖表 | 純 CSS 實現，無額外套件 |
 | 響應式 | CSS Grid + Flexbox，支援手機/平板/桌面 |
-
-## 驗證報告
-
-### 沖煞驗證（100筆抽樣）
-
-| 項目 | 結果 |
-|------|------|
-| 沖煞生肖 | ✅ 100% |
-| 煞方位 | ✅ 100% |
-| 被沖年干支 | ✅ 100% |
-| 虛歲計算 | ✅ 100% |
-
-### 三派宜忌驗證（300組）
-
-| 派系 | 宜 | 忌 |
-|------|-----|-----|
-| 建除十二神派 | ✅ 100% | ✅ 100% |
-| 天星擇日派 | ✅ 100% | ✅ 100% |
-| 紫白九星派 | ✅ 100% | ✅ 100% |
-
-### 新功能驗證（100筆抽樣）
-
-| 項目 | 結果 |
-|------|------|
-| 西方星座 | ✅ 100% |
-| 月相 | ✅ 100% |
-| 吉凶顏色 | ✅ 100% |
-| 吉凶數字 | ✅ 100% |
+| 字體 | Google Fonts - Noto Serif TC |
 
 ## 關於 Python
 
@@ -258,29 +270,7 @@ python convert_to_js.py   # 轉換為 JS
 
 本專案採用 [MIT 授權協議](LICENSE)。
 
-```
-MIT License
-
-Copyright (c) 2026 當麻實驗室
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
+Copyright (c) 2026 當麻實驗室 (donmalab.com)
 
 ## 致謝
 
