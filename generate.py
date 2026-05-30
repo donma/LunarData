@@ -284,6 +284,23 @@ if os.path.exists(_DEITY_INFO_PATH):
 GREGORIAN_DEITY = {
     (12, 25): ["耶穌基督誕辰（聖誕節）"],
 }
+
+# 農曆節日 (月, 日)
+LUNAR_HOLIDAYS = {
+    (1, 1): ["春節"],
+    (1, 15): ["元宵節"],
+    (1, 20): ["天穿日"],
+    (2, 2): ["龍抬頭"],
+    (5, 5): ["端午節"],
+    (7, 7): ["七夕"],
+    (7, 15): ["中元節"],
+    (8, 15): ["中秋節"],
+    (9, 9): ["重陽節"],
+    (12, 8): ["臘八節"],
+    (12, 23): ["小年"],
+    (12, 30): ["除夕"],
+}
+
 DEITY_BIRTHDAYS = {
     (1, 1): ["彌勒菩薩聖誕"],
     (1, 5): ["路頭神聖誕"],
@@ -533,11 +550,14 @@ def get_solar_term_info(dt, solar_terms_dict):
 
 
 def get_deity_birthdays(lunar_month, lunar_day, gregorian_month=None, gregorian_day=None):
-    """取得神明誕辰（農曆 + 西曆）"""
+    """取得神明誕辰（農曆 + 西曆 + 農曆節日）"""
     result = []
     # 農曆誕辰
     lunar_deities = DEITY_BIRTHDAYS.get((lunar_month, lunar_day), [])
     result.extend(lunar_deities)
+    # 農曆節日
+    lunar_holidays = LUNAR_HOLIDAYS.get((lunar_month, lunar_day), [])
+    result.extend(lunar_holidays)
     # 西曆誕辰
     if gregorian_month and gregorian_day:
         gregorian_deities = GREGORIAN_DEITY.get((gregorian_month, gregorian_day), [])
