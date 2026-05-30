@@ -1991,47 +1991,56 @@ function renderElementsChartFull(allDays) {
 }
 
 function renderThreeSchools(ts) {
-  let html = '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">';
-  
   const schools = [
-    { key: 'jianchu', name: '建除十二神派', icon: '建' },
-    { key: 'tianxing', name: '天星擇日派', icon: '星' },
-    { key: 'jiubai', name: '紫白九星派', icon: '九' }
+    { key: 'jianchu', name: '建除十二神派', icon: '建', desc: '以建除十二值日定吉凶' },
+    { key: 'tianxing', name: '天星擇日派', icon: '星', desc: '參考二十八星宿運行' },
+    { key: 'jiubai', name: '紫白九星派', icon: '九', desc: '結合九宮飛星與八卦' }
   ];
   
+  let html = '';
   schools.forEach(school => {
     const data = ts[school.key];
     if (data) {
-      html += `<div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:1rem;">
-        <div style="font-weight:700;color:var(--red);margin-bottom:.5rem;font-size:.9rem;">${school.icon} ${school.name}</div>
-        <div style="font-size:.8rem;color:var(--text-light);margin-bottom:.5rem;line-height:1.5;">${data.desc || ''}</div>
+      html += `<div style="margin-bottom:1.5rem;background:#fff;border:1px solid var(--border);border-radius:10px;padding:1.2rem;">
+        <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.8rem;padding-bottom:.5rem;border-bottom:2px dashed var(--border);">
+          <span style="background:var(--red);color:#fff;width:1.8rem;height:1.8rem;display:flex;align-items:center;justify-content:center;border-radius:50%;font-weight:900;font-size:.9rem;">${school.icon}</span>
+          <div>
+            <div style="font-weight:900;color:var(--red);font-size:1rem;">${school.name}</div>
+            <div style="font-size:.75rem;color:var(--text-light);">${school.desc}</div>
+          </div>
+        </div>
+        ${data.desc ? `<div style="font-size:.85rem;color:var(--text);margin-bottom:.8rem;padding:.5rem;background:#FFF8E1;border-radius:6px;border-left:3px solid var(--gold);">${data.desc}</div>` : ''}
         ${data.yi && data.yi.length > 0 ? `
-        <div style="margin-bottom:.3rem;">
-          <span class="yiji-label yi" style="font-size:.7rem;">宜</span>
-          <div class="yiji-tags" style="margin-top:.3rem;">
+        <div style="margin-bottom:.6rem;">
+          <div style="display:flex;align-items:center;gap:.3rem;margin-bottom:.3rem;">
+            <span style="background:#E8F5E9;color:#2E7D32;padding:.15rem .5rem;border-radius:4px;font-size:.8rem;font-weight:700;">宜</span>
+          </div>
+          <div class="yiji-tags">
             ${data.yi.map(item => {
               const explain = getYijiExplain(item);
-              return `<span class="yiji-tag yi" style="font-size:.75rem;">${item}${explain ? `<span class="tip">${explain}</span>` : ''}</span>`;
+              return `<span class="yiji-tag yi">${item}${explain ? `<span class="tip">${explain}</span>` : ''}</span>`;
             }).join('')}
           </div>
         </div>
         ` : ''}
         ${data.ji && data.ji.length > 0 ? `
         <div>
-          <span class="yiji-label ji" style="font-size:.7rem;">忌</span>
-          <div class="yiji-tags" style="margin-top:.3rem;">
+          <div style="display:flex;align-items:center;gap:.3rem;margin-bottom:.3rem;">
+            <span style="background:#FFEBEE;color:#C62828;padding:.15rem .5rem;border-radius:4px;font-size:.8rem;font-weight:700;">忌</span>
+          </div>
+          <div class="yiji-tags">
             ${data.ji.map(item => {
               const explain = getYijiExplain(item);
-              return `<span class="yiji-tag ji" style="font-size:.75rem;">${item}${explain ? `<span class="tip">${explain}</span>` : ''}</span>`;
+              return `<span class="yiji-tag ji">${item}${explain ? `<span class="tip">${explain}</span>` : ''}</span>`;
             }).join('')}
           </div>
         </div>
         ` : ''}
+        ${(!data.yi || data.yi.length === 0) && (!data.ji || data.ji.length === 0) ? '<div style="font-size:.85rem;color:var(--text-light);">無特殊宜忌</div>' : ''}
       </div>`;
     }
   });
   
-  html += '</div>';
   return html;
 }
 
