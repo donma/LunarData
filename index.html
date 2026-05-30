@@ -524,6 +524,206 @@
     }
   }
 
+  /* Charts Section */
+  .charts-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .chart-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+  }
+  .chart-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--red);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+
+  /* Calendar Chart */
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+  .calendar-header {
+    text-align: center;
+    font-size: .75rem;
+    font-weight: 700;
+    color: var(--text-light);
+    padding: .3rem;
+  }
+  .calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: .85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+    position: relative;
+    border: 2px solid transparent;
+  }
+  .calendar-day:hover {
+    transform: scale(1.1);
+    z-index: 2;
+  }
+  .calendar-day.today {
+    border-color: var(--red);
+    box-shadow: 0 0 8px rgba(192,57,43,.3);
+  }
+  .calendar-day .day-num {
+    font-size: .9rem;
+    font-weight: 700;
+  }
+  .calendar-day .day-lunar {
+    font-size: .55rem;
+    opacity: .8;
+  }
+  .level-1 { background: #E8F5E9; color: #2E7D32; }
+  .level-2 { background: #F1F8E9; color: #558B2F; }
+  .level-3 { background: #FFF8E1; color: #F57F17; }
+  .level-4 { background: #FBE9E7; color: #BF360C; }
+  .level-5 { background: #FFEBEE; color: #C62828; }
+  .level-0 { background: #F5F5F5; color: #757575; }
+
+  /* Pie Chart */
+  .pie-container {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    justify-content: center;
+  }
+  .pie-chart {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    position: relative;
+  }
+  .pie-legend {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+  }
+  .pie-legend-item {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: .85rem;
+  }
+  .pie-legend-color {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  /* Five Elements Chart */
+  .elements-chart {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .element-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .5rem;
+    width: 60px;
+  }
+  .element-bar-fill {
+    width: 100%;
+    height: 120px;
+    background: #f0f0f0;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+  .element-bar-inner {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 8px;
+    transition: height .5s ease;
+  }
+  .element-bar-label {
+    font-size: .85rem;
+    font-weight: 700;
+  }
+  .element-bar-count {
+    font-size: .75rem;
+    color: var(--text-light);
+  }
+
+  /* Solar Term Timeline */
+  .solar-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: .8rem;
+  }
+  .solar-term-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: .5rem;
+    border-radius: 8px;
+    transition: background .2s;
+  }
+  .solar-term-item.current {
+    background: #FFF8E1;
+    border: 1px solid var(--gold);
+  }
+  .solar-term-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    border: 2px solid var(--border);
+  }
+  .solar-term-item.current .solar-term-dot {
+    background: var(--red);
+    border-color: var(--red);
+  }
+  .solar-term-item.past .solar-term-dot {
+    background: var(--border);
+  }
+  .solar-term-name {
+    font-weight: 700;
+    font-size: .9rem;
+    min-width: 3rem;
+  }
+  .solar-term-date {
+    font-size: .8rem;
+    color: var(--text-light);
+  }
+
+  /* Level Bar */
+  .level-bar {
+    height: 6px;
+    background: #f0f0f0;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: .3rem;
+  }
+  .level-bar-inner {
+    height: 100%;
+    border-radius: 3px;
+    transition: width .5s ease;
+  }
+
   /* Level */
   .level-display {
     text-align: center;
@@ -577,6 +777,11 @@
     .date-bar { padding: .5rem; gap: .3rem; }
     .date-bar input[type="date"] { font-size: .85rem; padding: .4rem .5rem; }
     .date-bar button { padding: .4rem .6rem; font-size: .85rem; }
+    .charts-section { grid-template-columns: 1fr; }
+    .pie-container { flex-direction: column; align-items: center; }
+    .calendar-day { font-size: .75rem; }
+    .calendar-day .day-num { font-size: .8rem; }
+    .calendar-day .day-lunar { font-size: .5rem; }
   }
   @media (max-width: 480px) {
     .container { padding: 1rem .5rem; }
@@ -587,6 +792,9 @@
     .ninestar-cell { width: 2rem; height: 2rem; font-size: .9rem; }
     .officer-main .name { font-size: 1.6rem; }
     .date-bar { padding: .4rem; }
+    .chart-card { padding: 1rem; }
+    .element-bar { width: 45px; }
+    .element-bar-fill { height: 80px; }
   }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&display=swap" rel="stylesheet">
@@ -1031,6 +1239,12 @@ function goToday() {
   loadData();
 }
 
+function changeToDate(day) {
+  currentDate.setDate(day);
+  document.getElementById('dateInput').value = formatDate(currentDate);
+  loadData();
+}
+
 function loadViaScript(y, m) {
   return new Promise((resolve, reject) => {
     const key = `_${y}_${m}`;
@@ -1074,7 +1288,7 @@ async function loadData() {
     if (!data || !data.days) throw new Error('資料格式錯誤');
     const dayData = data.days.find(day => day.day === d);
     if (!dayData) throw new Error('找不到日期資料');
-    render(dayData);
+    render(dayData, data);
   } catch (err) {
     app.innerHTML = `<div class="loading" style="color:#c62828;">
       <div style="font-size:3rem;margin-bottom:1rem;">⚠</div>
@@ -1084,13 +1298,14 @@ async function loadData() {
   }
 }
 
-function render(d) {
+function render(d, monthData) {
   const lunar = d.lunar;
   const dg = d.dayGanzhi;
   const mg = d.monthGanzhi;
   const st = d.solarTerm;
   const tw = d.twelveOfficer;
   const ld = d.luckyDirection;
+  const allDays = monthData ? monthData.days : [];
 
   const weekColors = ['#e74c3c','#e67e22','#f1c40f','#27ae60','#2980b9','#8e44ad','#e74c3c'];
   const weekIdx = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'].indexOf(d.weekDay);
@@ -1109,6 +1324,33 @@ function render(d) {
       <span class="tag">干支：${dg.full}</span>
       <span class="tag">納音：${dg.nayin}</span>
       ${d.deityBirthday.length ? d.deityBirthday.map(b => `<span class="tag">${b}</span>`).join('') : ''}
+    </div>
+  </div>
+
+  <!-- 圖表區域 -->
+  <div class="charts-section">
+    <!-- 月曆總覽 -->
+    <div class="chart-card">
+      <div class="chart-title">📅 月曆總覽</div>
+      ${renderCalendar(allDays, d.day)}
+    </div>
+
+    <!-- 本月吉凶比例 -->
+    <div class="chart-card">
+      <div class="chart-title">📊 本月吉凶比例</div>
+      ${renderPieChart(allDays)}
+    </div>
+
+    <!-- 五行分布 -->
+    <div class="chart-card">
+      <div class="chart-title">🔮 本月五行分布</div>
+      ${renderElementsChart(allDays)}
+    </div>
+
+    <!-- 節氣時間軸 -->
+    <div class="chart-card">
+      <div class="chart-title">🌀 節氣時間軸</div>
+      ${renderSolarTimeline(st)}
     </div>
   </div>
 
@@ -1328,6 +1570,176 @@ function renderNineStar(str) {
     const cls = i === 0 ? 'center' : '';
     html += `<div class="ninestar-cell ${cls}" title="${positions[i]}">${str[i]}</div>`;
   }
+  return html;
+}
+
+// ============================
+// 圖表渲染函數
+// ============================
+
+function renderCalendar(allDays, currentDay) {
+  const headers = ['日','一','二','三','四','五','六'];
+  let html = '<div class="calendar-grid">';
+  
+  // 星期標題
+  headers.forEach(h => {
+    html += `<div class="calendar-header">${h}</div>`;
+  });
+  
+  // 計算第一天是星期幾
+  if (allDays.length > 0) {
+    const firstDate = new Date(allDays[0].gregorian);
+    const firstDay = firstDate.getDay();
+    
+    // 空白填充
+    for (let i = 0; i < firstDay; i++) {
+      html += '<div class="calendar-day"></div>';
+    }
+    
+    // 日期
+    allDays.forEach(day => {
+      const level = Math.max(0, Math.min(5, day.todayLevel || 0));
+      const isToday = day.day === currentDay;
+      const lunarDay = day.lunar.dayName;
+      const cls = `level-${level}${isToday ? ' today' : ''}`;
+      
+      html += `<div class="calendar-day ${cls}" onclick="changeToDate(${day.day})" title="${day.gregorian}">
+        <span class="day-num">${day.day}</span>
+        <span class="day-lunar">${lunarDay}</span>
+      </div>`;
+    });
+  }
+  
+  html += '</div>';
+  return html;
+}
+
+function renderPieChart(allDays) {
+  let good = 0, neutral = 0, bad = 0;
+  
+  allDays.forEach(day => {
+    const level = day.todayLevel || 0;
+    if (level <= 2) good++;
+    else if (level === 3) neutral++;
+    else bad++;
+  });
+  
+  const total = allDays.length || 1;
+  const goodPct = (good / total * 100).toFixed(1);
+  const neutralPct = (neutral / total * 100).toFixed(1);
+  const badPct = (bad / total * 100).toFixed(1);
+  
+  // 用 conic-gradient 做圓餅圖
+  const goodDeg = good / total * 360;
+  const neutralDeg = neutral / total * 360;
+  
+  const pieStyle = `background: conic-gradient(
+    #4CAF50 0deg ${goodDeg}deg,
+    #FFC107 ${goodDeg}deg ${goodDeg + neutralDeg}deg,
+    #F44336 ${goodDeg + neutralDeg}deg 360deg
+  );`;
+  
+  let html = `<div class="pie-container">
+    <div class="pie-chart" style="${pieStyle}"></div>
+    <div class="pie-legend">
+      <div class="pie-legend-item">
+        <div class="pie-legend-color" style="background:#4CAF50;"></div>
+        <span>吉日 ${good} 天 (${goodPct}%)</span>
+      </div>
+      <div class="pie-legend-item">
+        <div class="pie-legend-color" style="background:#FFC107;"></div>
+        <span>平日 ${neutral} 天 (${neutralPct}%)</span>
+      </div>
+      <div class="pie-legend-item">
+        <div class="pie-legend-color" style="background:#F44336;"></div>
+        <span>凶日 ${bad} 天 (${badPct}%)</span>
+      </div>
+    </div>
+  </div>`;
+  
+  return html;
+}
+
+function renderElementsChart(allDays) {
+  const elements = { '金': 0, '木': 0, '水': 0, '火': 0, '土': 0 };
+  
+  allDays.forEach(day => {
+    const nayin = day.dayGanzhi.nayin || '';
+    if (nayin.includes('金')) elements['金']++;
+    else if (nayin.includes('木')) elements['木']++;
+    else if (nayin.includes('水')) elements['水']++;
+    else if (nayin.includes('火')) elements['火']++;
+    else if (nayin.includes('土')) elements['土']++;
+  });
+  
+  const maxVal = Math.max(...Object.values(elements), 1);
+  const colors = {
+    '金': '#9E9E9E',
+    '木': '#4CAF50',
+    '水': '#2196F3',
+    '火': '#F44336',
+    '土': '#795548'
+  };
+  
+  let html = '<div class="elements-chart">';
+  
+  for (const [el, count] of Object.entries(elements)) {
+    const height = (count / maxVal * 100).toFixed(0);
+    html += `<div class="element-bar">
+      <div class="element-bar-fill">
+        <div class="element-bar-inner" style="height:${height}%;background:${colors[el]};"></div>
+      </div>
+      <div class="element-bar-label" style="color:${colors[el]};">${el}</div>
+      <div class="element-bar-count">${count}日</div>
+    </div>`;
+  }
+  
+  html += '</div>';
+  return html;
+}
+
+function renderSolarTimeline(currentTerm) {
+  const solarTerms = [
+    '小寒', '大寒', '立春', '雨水', '驚蟄', '春分',
+    '清明', '穀雨', '立夏', '小滿', '芒種', '夏至',
+    '小暑', '大暑', '立秋', '處暑', '白露', '秋分',
+    '寒露', '霜降', '立冬', '小雪', '大雪', '冬至'
+  ];
+  
+  // 簡繁轉換對照
+  const s2t = {
+    '惊蛰': '驚蟄', '处暑': '處暑', '白露': '白露', '秋分': '秋分',
+    '寒露': '寒露', '霜降': '霜降', '立冬': '立冬', '小雪': '小雪',
+    '大雪': '大雪', '冬至': '冬至', '小寒': '小寒', '大寒': '大寒',
+    '立春': '立春', '雨水': '雨水', '穀雨': '穀雨', '谷雨': '穀雨',
+    '小满': '小滿', '芒种': '芒種', '夏至': '夏至', '小暑': '小暑',
+    '大暑': '大暑', '立秋': '立秋', '立夏': '立夏', '清明': '清明',
+    '春分': '春分'
+  };
+  
+  const termName = s2t[currentTerm.name] || currentTerm.name;
+  const currentIdx = solarTerms.indexOf(termName);
+  
+  let html = '<div class="solar-timeline">';
+  
+  // 只顯示前後各3個節氣
+  const start = Math.max(0, currentIdx - 3);
+  const end = Math.min(solarTerms.length, currentIdx + 4);
+  
+  for (let i = start; i < end; i++) {
+    const term = solarTerms[i];
+    let cls = '';
+    if (i < currentIdx) cls = 'past';
+    else if (i === currentIdx) cls = 'current';
+    
+    html += `<div class="solar-term-item ${cls}">
+      <div class="solar-term-dot"></div>
+      <div class="solar-term-name">${term}</div>
+      <div class="solar-term-date">${i === currentIdx ? '← 現在' : ''}</div>
+    </div>`;
+  }
+  
+  html += '</div>';
   return html;
 }
 
