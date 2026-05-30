@@ -605,7 +605,23 @@ def generate_day_data(dt):
     twelve_officer_god = s2t(officer_info[1]) if len(officer_info) > 1 else ""
     is_yellow_road = officer_info[2] if len(officer_info) > 2 else ""
 
-    star28 = s2t(a.get_the28Stars())
+    star28_month = s2t(a.get_the28Stars())  # 月宿法（cnlunar預設）
+    
+    # 日宿法二十八宿計算
+    # 二十八宿依日干支輪轉
+    star28_full_list = [
+        '角木蛟','亢金龍','氐土貉','房日兔','心月狐','尾火虎','箕水豹',
+        '斗木獬','牛金牛','女土蝠','虛日鼠','危月燕','室火豬','壁水貐',
+        '奎木狼','婁金狗','胃土雉','昴日雞','畢月烏','觜火猴','參水猿',
+        '井木犴','鬼金羊','柳土獐','星日馬','張月鹿','翼火蛇','軫水蚓'
+    ]
+    star28_short_list = ['角','亢','氐','房','心','尾','箕','斗','牛','女','虛','危','室','壁','奎','婁','胃','昴','畢','觜','參','井','鬼','柳','星','張','翼','軫']
+    
+    day_gz_idx = (HEAVENLY_STEMS.index(day8[0]) * 12 + EARTHLY_BRANCHES.index(day8[1])) % 60 if day8[0] in HEAVENLY_STEMS and day8[1] in EARTHLY_BRANCHES else 0
+    star28_day_idx = day_gz_idx % 28
+    star28_day_full = star28_full_list[star28_day_idx]
+    star28_day = star28_short_list[star28_day_idx]
+    
     nine_star = str(a.get_the9FlyStar())
     peng_taboo = s2t(a.get_pengTaboo())
     nayin = s2t(a.get_nayin())
@@ -716,7 +732,8 @@ def generate_day_data(dt):
             "god": twelve_officer_god,
             "isYellowRoad": is_yellow
         },
-        "twentyEightMansion": star28,
+        "twentyEightMansion": star28_day_full,
+        "twentyEightMansion_month": star28_month,
         "nineStar": nine_star,
         "pengTaboo": peng_taboo,
         "fiveElements": five_elements,
@@ -730,7 +747,7 @@ def generate_day_data(dt):
         "luckyDirection": lucky_dict,
         "threeSchools": {
             "jianchu": get_jianchu_yiji(twelve_officer),
-            "tianxing": get_star28_yiji(star28),
+            "tianxing": get_star28_yiji(star28_day),
             "jiubai": get_jiubai_yiji(nine_star)
         },
         "fetalGod": fetal_god,
