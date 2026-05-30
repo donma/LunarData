@@ -1639,9 +1639,17 @@ function render(d, monthData) {
     <!-- 二十八宿 -->
     <div class="card">
       <div class="card-title"><span class="icon">星</span>宿</div>
-      <div style="text-align:center;">
-        <div class="star-display">${d.twentyEightMansion}</div>
-        ${getStar28Explain(d.twentyEightMansion) ? `<div style="font-size:.8rem;color:var(--text-light);margin-top:.3rem;line-height:1.6;">${getStar28Explain(d.twentyEightMansion)}</div>` : ''}
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div style="text-align:center;">
+          <div style="font-size:.75rem;color:var(--text-light);margin-bottom:.3rem;">日宿法（日干支）</div>
+          <div class="star-display">${d.twentyEightMansion}</div>
+          ${getStar28Explain(d.twentyEightMansion) ? `<div style="font-size:.75rem;color:var(--text-light);margin-top:.3rem;line-height:1.4;">${getStar28Explain(d.twentyEightMansion)}</div>` : ''}
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:.75rem;color:var(--text-light);margin-bottom:.3rem;">月宿法（月令）</div>
+          <div class="star-display">${d.twentyEightMansion_month || ''}</div>
+          ${getStar28Explain(d.twentyEightMansion_month || '') ? `<div style="font-size:.75rem;color:var(--text-light);margin-top:.3rem;line-height:1.4;">${getStar28Explain(d.twentyEightMansion_month || '')}</div>` : ''}
+        </div>
       </div>
     </div>
 

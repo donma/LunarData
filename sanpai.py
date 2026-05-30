@@ -303,7 +303,20 @@ def get_jianchu_yiji(officer_name):
 
 def get_star28_yiji(star_name):
     """取得天星擇日派宜忌（二十八宿）"""
+    if not star_name:
+        return None
+    
+    # 嘗試完整名稱匹配
     data = STAR28_YIJI.get(star_name, None)
+    
+    # 如果沒找到，嘗試用第一個字匹配
+    if not data and len(star_name) > 0:
+        first_char = star_name[0]
+        for key, val in STAR28_YIJI.items():
+            if key.startswith(first_char):
+                data = val
+                break
+    
     if data:
         return {
             "school": "天星擇日派",
