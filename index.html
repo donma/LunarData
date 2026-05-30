@@ -1431,6 +1431,15 @@ function updateUrl() {
   }
 }
 
+function getZodiacImage(zodiac) {
+  const map = {
+    '鼠': 'rat.png', '牛': 'ox.png', '虎': 'tiger.png', '兔': 'rabbit.png',
+    '龍': 'dragon.png', '蛇': 'snake.png', '馬': 'horse.png', '羊': 'sheep.png',
+    '猴': 'monkey.png', '雞': 'rooster.png', '狗': 'dog.png', '豬': 'pig.png'
+  };
+  return map[zodiac] || 'dragon.png';
+}
+
 function getZodiacAge(clashYearGanzhi, currentYear) {
   if (!clashYearGanzhi || clashYearGanzhi.length < 2) return '';
   
@@ -1614,9 +1623,10 @@ function render(d, monthData) {
     </div>
 
     <!-- 沖煞 -->
-    <div class="card">
+    <div class="card" style="position:relative;overflow:hidden;">
+      <div style="position:absolute;top:50%;right:10%;transform:translateY(-50%);width:180px;height:180px;opacity:0.08;background-image:url('assets/zodiac/${getZodiacImage(d.zodiacClash)}');background-size:contain;background-repeat:no-repeat;background-position:center;pointer-events:none;"></div>
       <div class="card-title"><span class="icon">沖</span>煞</div>
-      <div style="text-align:center;padding:.5rem;">
+      <div style="text-align:center;padding:.5rem;position:relative;">
         <div style="font-size:2rem;font-weight:900;color:var(--red);margin-bottom:.3rem;">沖${d.zodiacClash}</div>
         <div style="font-size:1rem;color:var(--text-light);">${d.clashDetail} ${getZodiacAge(d.clashYearGanzhi, currentDate.getFullYear())}</div>
         <div style="font-size:1.2rem;font-weight:700;margin-top:.5rem;">煞${d.clashDirection}</div>
