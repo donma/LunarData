@@ -14,6 +14,7 @@ import cnlunar
 import datetime
 import json
 import os
+from sanpai import get_jianchu_yiji, get_star28_yiji, get_jiubai_yiji
 
 # ============================
 # 簡體轉繁體字典（涵蓋黃曆常用字）
@@ -724,6 +725,11 @@ def generate_day_data(dt):
         "inauspiciousHours": inauspicious_hours,
         "hourGanzhi": hour_ganzhi,
         "luckyDirection": lucky_dict,
+        "threeSchools": {
+            "jianchu": get_jianchu_yiji(twelve_officer),
+            "tianxing": get_star28_yiji(star28),
+            "jiubai": get_jiubai_yiji(nine_star)
+        },
         "fetalGod": fetal_god,
         "todayLevel": today_level,
         "todayLevelName": today_level_name,

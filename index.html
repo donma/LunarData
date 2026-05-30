@@ -1676,6 +1676,14 @@ function render(d, monthData) {
       </div>
     </div>
 
+    <!-- 三派宜忌 -->
+    ${d.threeSchools ? `
+    <div class="card full">
+      <div class="card-title"><span class="icon">三</span>派宜忌</div>
+      ${renderThreeSchools(d.threeSchools)}
+    </div>
+    ` : ''}
+
     <!-- 吉凶時 -->
     <div class="card full">
       <div class="card-title"><span class="icon">時</span>辰吉凶</div>
@@ -1979,6 +1987,51 @@ function renderElementsChartFull(allDays) {
   }
   html += '</div>';
   
+  return html;
+}
+
+function renderThreeSchools(ts) {
+  let html = '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">';
+  
+  const schools = [
+    { key: 'jianchu', name: '建除十二神派', icon: '建' },
+    { key: 'tianxing', name: '天星擇日派', icon: '星' },
+    { key: 'jiubai', name: '紫白九星派', icon: '九' }
+  ];
+  
+  schools.forEach(school => {
+    const data = ts[school.key];
+    if (data) {
+      html += `<div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:1rem;">
+        <div style="font-weight:700;color:var(--red);margin-bottom:.5rem;font-size:.9rem;">${school.icon} ${school.name}</div>
+        <div style="font-size:.8rem;color:var(--text-light);margin-bottom:.5rem;line-height:1.5;">${data.desc || ''}</div>
+        ${data.yi && data.yi.length > 0 ? `
+        <div style="margin-bottom:.3rem;">
+          <span class="yiji-label yi" style="font-size:.7rem;">宜</span>
+          <div class="yiji-tags" style="margin-top:.3rem;">
+            ${data.yi.map(item => {
+              const explain = getYijiExplain(item);
+              return `<span class="yiji-tag yi" style="font-size:.75rem;">${item}${explain ? `<span class="tip">${explain}</span>` : ''}</span>`;
+            }).join('')}
+          </div>
+        </div>
+        ` : ''}
+        ${data.ji && data.ji.length > 0 ? `
+        <div>
+          <span class="yiji-label ji" style="font-size:.7rem;">忌</span>
+          <div class="yiji-tags" style="margin-top:.3rem;">
+            ${data.ji.map(item => {
+              const explain = getYijiExplain(item);
+              return `<span class="yiji-tag ji" style="font-size:.75rem;">${item}${explain ? `<span class="tip">${explain}</span>` : ''}</span>`;
+            }).join('')}
+          </div>
+        </div>
+        ` : ''}
+      </div>`;
+    }
+  });
+  
+  html += '</div>';
   return html;
 }
 
