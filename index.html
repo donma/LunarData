@@ -1925,13 +1925,14 @@ function getThaiBuddhistEmoji(eventId) {
 function renderThaiBuddhistSection(dt) {
   const events = getThaiBuddhistEventsForDate(dt);
 
+  if (events.length === 0) return '';
+
   return `
     <div class="card full" style="margin-bottom:1.5rem;">
       <div class="card-title"><span class="icon">☸️</span> 泰國佛日參考資料（規則推算版）</div>
       <div style="margin:-.15rem 0 .9rem;color:var(--text-light);font-size:.82rem;line-height:1.7;">
         依規則推算整理，可能與外部年表有 1 天差異，請作為參考資料使用。
       </div>
-      ${events.length > 0 ? `
       <div class="deity-list">
         ${events.map(event => `
           <div class="deity-item" onclick="this.querySelector('.deity-detail').classList.toggle('show')" style="cursor:pointer;">
@@ -1955,11 +1956,6 @@ function renderThaiBuddhistSection(dt) {
           </div>
         `).join('')}
       </div>
-      ` : `
-      <div style="padding:.85rem 1rem;border:1px dashed var(--border);border-radius:10px;background:#fffaf2;color:var(--text-light);font-size:.88rem;line-height:1.7;">
-        今日無對應泰國佛日資料；鄰近日期若有佛日、佛教節日或民俗候選日，會顯示在這裡。
-      </div>
-      `}
     </div>
   `;
 }
