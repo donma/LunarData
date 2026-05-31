@@ -1,0 +1,31 @@
+{
+  "name": "擇日知錄 - 農民曆",
+  "short_name": "擇日知錄",
+  "description": "農民曆、每日宜忌、吉凶方位、節氣神明與農曆資料查詢工具。",
+  "start_url": "/LunarData/",
+  "scope": "/LunarData/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#b91c1c",
+  "theme_color": "#b91c1c",
+  "lang": "zh-TW",
+  "categories": ["utilities", "lifestyle", "reference"],
+  "icons": [
+    {
+      "src": "/LunarData/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/LunarData/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/LunarData/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

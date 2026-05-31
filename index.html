@@ -6,6 +6,14 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="/LunarData/manifest.json">
+<meta name="theme-color" content="#b91c1c">
+<meta name="application-name" content="擇日知錄">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="擇日知錄">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="/LunarData/icons/apple-touch-icon.png">
 <title>擇日知錄 - 農民曆</title>
 <style>
   :root {
@@ -882,6 +890,75 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
+  /* PWA Install Prompt */
+  .install-prompt {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    display: none;
+    align-items: center;
+    gap: .6rem;
+    max-width: min(360px, calc(100vw - 1rem));
+    padding: .75rem .9rem;
+    background: rgba(185, 28, 28, .96);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,.18);
+    border-radius: 14px;
+    box-shadow: 0 10px 28px rgba(120, 18, 18, .26);
+    z-index: 260;
+    backdrop-filter: blur(8px);
+  }
+  .install-prompt.show {
+    display: flex;
+  }
+  .install-prompt-text {
+    flex: 1;
+    min-width: 0;
+  }
+  .install-prompt-title {
+    font-size: .88rem;
+    font-weight: 700;
+    margin-bottom: .15rem;
+  }
+  .install-prompt-desc {
+    font-size: .74rem;
+    line-height: 1.45;
+    opacity: .92;
+  }
+  .install-prompt-actions {
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+    flex-shrink: 0;
+  }
+  .install-prompt-btn,
+  .install-prompt-close {
+    border: none;
+    border-radius: 999px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: transform .2s, opacity .2s, background .2s;
+  }
+  .install-prompt-btn:hover,
+  .install-prompt-close:hover {
+    transform: translateY(-1px);
+  }
+  .install-prompt-btn {
+    background: #fff3f0;
+    color: var(--dark-red);
+    padding: .45rem .8rem;
+    font-size: .82rem;
+    font-weight: 700;
+  }
+  .install-prompt-close {
+    width: 2rem;
+    height: 2rem;
+    background: rgba(255,255,255,.14);
+    color: #fff;
+    font-size: 1rem;
+    line-height: 1;
+  }
+
   /* Responsive */
   @media (max-width: 768px) {
     .grid { grid-template-columns: 1fr; }
@@ -905,6 +982,12 @@
     .calendar-day { font-size: .75rem; }
     .calendar-day .day-num { font-size: .8rem; }
     .calendar-day .day-lunar { font-size: .5rem; }
+    .install-prompt {
+      left: .75rem;
+      right: .75rem;
+      bottom: .75rem;
+      max-width: none;
+    }
   }
   @media (max-width: 480px) {
     .container { padding: 1rem .5rem; }
@@ -918,6 +1001,21 @@
     .chart-card { padding: 1rem; }
     .element-bar { width: 45px; }
     .element-bar-fill { height: 80px; }
+    .install-prompt {
+      gap: .5rem;
+      padding: .7rem .75rem;
+      bottom: .6rem;
+    }
+    .install-prompt-title { font-size: .82rem; }
+    .install-prompt-desc { font-size: .7rem; }
+    .install-prompt-actions {
+      flex-direction: column;
+      gap: .35rem;
+    }
+    .install-prompt-btn {
+      padding: .42rem .72rem;
+      font-size: .78rem;
+    }
   }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&display=swap" rel="stylesheet">
@@ -945,11 +1043,26 @@
   擇日知錄 - 農民曆 © 2026 | <a href="https://donmalab.com" target="_blank" style="color:var(--text-light);text-decoration:underline;">當麻實驗室</a> | 資料僅供參考 | 農曆資料庫 1970-2100
 </div>
 
+<div id="installPrompt" class="install-prompt" aria-live="polite" aria-hidden="true">
+  <div class="install-prompt-text">
+    <div id="installPromptTitle" class="install-prompt-title">安裝擇日知錄</div>
+    <div id="installPromptDesc" class="install-prompt-desc">可加入主畫面或桌面，之後像 App 一樣快速開啟。</div>
+  </div>
+  <div class="install-prompt-actions">
+    <button id="installPromptAction" class="install-prompt-btn" type="button">安裝</button>
+    <button id="installPromptClose" class="install-prompt-close" type="button" aria-label="關閉安裝提示">×</button>
+  </div>
+</div>
+
 <script>
 window.LunarData = {};
 const BASE_PATH = './';
+const PWA_DISMISS_KEY = 'lunarDataPwaInstallDismissedAt';
+const PWA_DISMISS_MS = 7 * 24 * 60 * 60 * 1000;
 let currentDate = null;
 const isFileProtocol = window.location.protocol === 'file:';
+let deferredInstallPrompt = null;
+let hasInstalledInSession = false;
 
 function getBasePath() {
   if (isFileProtocol) {
@@ -959,6 +1072,146 @@ function getBasePath() {
     return basePath;
   }
   return './';
+}
+
+function isStandaloneMode() {
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+}
+
+function isIosSafari() {
+  const ua = window.navigator.userAgent || '';
+  const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const isWebkit = /WebKit/.test(ua);
+  const isCriOS = /CriOS/.test(ua);
+  const isFxiOS = /FxiOS/.test(ua);
+  const isEdgiOS = /EdgiOS/.test(ua);
+  return isIOS && isWebkit && !isCriOS && !isFxiOS && !isEdgiOS;
+}
+
+function safeStorageGet(key) {
+  try {
+    return localStorage.getItem(key);
+  } catch (e) {
+    return null;
+  }
+}
+
+function safeStorageSet(key, value) {
+  try {
+    localStorage.setItem(key, value);
+  } catch (e) {
+    // 忽略 localStorage 受限情況
+  }
+}
+
+function wasInstallPromptDismissedRecently() {
+  const raw = safeStorageGet(PWA_DISMISS_KEY);
+  if (!raw) return false;
+  const dismissedAt = Number(raw);
+  if (!Number.isFinite(dismissedAt)) return false;
+  return (Date.now() - dismissedAt) < PWA_DISMISS_MS;
+}
+
+function markInstallPromptDismissed() {
+  safeStorageSet(PWA_DISMISS_KEY, String(Date.now()));
+}
+
+function isInstalledOrStandalone() {
+  return hasInstalledInSession || isStandaloneMode();
+}
+
+function hideInstallPrompt(rememberDismissed) {
+  const prompt = document.getElementById('installPrompt');
+  if (!prompt) return;
+  prompt.classList.remove('show');
+  prompt.setAttribute('aria-hidden', 'true');
+  if (rememberDismissed) {
+    markInstallPromptDismissed();
+  }
+}
+
+function showInstallPrompt(options) {
+  if (isInstalledOrStandalone() || wasInstallPromptDismissedRecently()) {
+    return;
+  }
+
+  const prompt = document.getElementById('installPrompt');
+  const title = document.getElementById('installPromptTitle');
+  const desc = document.getElementById('installPromptDesc');
+  const action = document.getElementById('installPromptAction');
+  if (!prompt || !title || !desc || !action) return;
+
+  title.textContent = options.title;
+  desc.textContent = options.desc;
+  action.textContent = options.actionLabel || '安裝';
+  action.hidden = !options.canInstall;
+  action.disabled = !options.canInstall;
+  prompt.classList.add('show');
+  prompt.setAttribute('aria-hidden', 'false');
+}
+
+function setupInstallPromptUi() {
+  const action = document.getElementById('installPromptAction');
+  const close = document.getElementById('installPromptClose');
+  if (!action || !close) return;
+
+  action.addEventListener('click', async function () {
+    if (!deferredInstallPrompt) return;
+    deferredInstallPrompt.prompt();
+    const choice = await deferredInstallPrompt.userChoice.catch(() => null);
+    deferredInstallPrompt = null;
+    if (choice && choice.outcome === 'accepted') {
+      hasInstalledInSession = true;
+      hideInstallPrompt(false);
+      return;
+    }
+    hideInstallPrompt(true);
+  });
+
+  close.addEventListener('click', function () {
+    hideInstallPrompt(true);
+  });
+
+  window.addEventListener('appinstalled', function () {
+    hasInstalledInSession = true;
+    deferredInstallPrompt = null;
+    hideInstallPrompt(false);
+  });
+
+  if (isIosSafari() && !isInstalledOrStandalone()) {
+    showInstallPrompt({
+      title: '加入主畫面',
+      desc: '可使用 Safari 分享按鈕，選擇加入主畫面。',
+      canInstall: false
+    });
+  }
+}
+
+function registerPwaFeatures() {
+  setupInstallPromptUi();
+
+  window.addEventListener('beforeinstallprompt', function (event) {
+    event.preventDefault();
+    deferredInstallPrompt = event;
+    showInstallPrompt({
+      title: '安裝擇日知錄',
+      desc: '可加入主畫面或桌面，之後像 App 一樣快速開啟。',
+      actionLabel: '安裝',
+      canInstall: true
+    });
+  });
+
+  if ('serviceWorker' in navigator && !isFileProtocol) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/LunarData/service-worker.js', {
+        scope: '/LunarData/'
+      }).then(function (registration) {
+        console.log('Service Worker registered:', registration.scope);
+      }).catch(function (error) {
+        console.error('Service Worker registration failed:', error);
+      });
+    });
+  }
 }
 
 // 測試用
@@ -2319,6 +2572,7 @@ function renderHours(d) {
   return html;
 }
 
+registerPwaFeatures();
 init();
 </script>
 </body>
