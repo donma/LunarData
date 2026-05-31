@@ -35,12 +35,14 @@
 - 喜神、財神、福神方位
 - 胎神方位
 - 生肖圖片（沖煞卡片背景）
+- 泰國佛日參考資料區塊（規則推算版，附 1 天差異提醒）
 
 ### 特色節日
 - **天穿日**（農曆正月二十）— 客家傳統節日，女媧補天紀念日
 - **天赦日**（春戊寅、夏甲午、秋戊申、冬甲子）— 百無禁忌的黃道吉日
-- **冷門國際節日** — 93 個西曆節日，包含國際壽司日、海盜說話日、醜毛衣日等趣味節日
+- **冷門國際節日** — 93 個西曆節日，包含國際壽司日、海盜說話日、醜毛衣日等趣味節日，並補上短版冷知識註解
 - **農曆傳統節日** — 春節、端午、中秋、重陽、除夕等 12 個重要節日
+- **泰國佛日參考資料** — 顯示泰國佛日、衛塞節、入雨安居等事件，採規則推算並明確標示參考性質
 
 ### 圖表總覽
 - 📅 月曆總覽（點擊切換日期）
@@ -99,7 +101,11 @@ LunarData/
 ├── verify_300.py           ← 三派宜忌驗證（僅開發用）
 ├── verify_new.py           ← 新功能驗證（僅開發用）
 ├── verify_full.py          ← 完整驗證（僅開發用）
+├── verify_thai_buddhist_myhora.py ← Thai Buddhist 對 myhora 全量交叉驗證
+├── build_holidays_js.py     ← 產生前端用 holidays.js
+├── build_thai_buddhist_js.py ← 產生前端用 Thai Buddhist JS 索引
 ├── verify_tianshe.py       ← 天赦日驗證（僅開發用）
+├── THAI_BUDDHIST_VERIFICATION.md ← Thai Buddhist 正式驗證報告
 ├── sanpai.py               ← 三派宜忌對照表
 ├── solar_term_desc.py      ← 節氣註解資料庫
 ├── peng_taboo.py           ← 彭祖百忌白話解釋
@@ -109,7 +115,8 @@ LunarData/
 │   ├── zodiac/             ← 十二生肖圖片
 │   │   ├── rat.png ~ pig.png
 │   ├── holidays.json       ← 西曆節日資料庫（93個）
-│   └── holidays.js         ← 西曆節日 JS 版
+│   ├── holidays.js         ← 西曆節日 JS 版
+│   └── thai-buddhist-days.js ← Thai Buddhist 依日期索引 JS 版
 │
 ├── 1970/ ~ 2100/           ← 年份資料夾
 │   ├── 01.json ~ 12.json   ← 月 JSON 資料
@@ -240,6 +247,16 @@ fetch('2026/05.js')
 | 2026-06-08 | 虛歲 | 丁未60歲 | 60歲 | ✅ |
 | 2024-05-30 | 天赦日 | 甲午 | 甲午 | ✅ |
 | 2026-03-05 | 天赦日 | 戊寅 | 戊寅 | ✅ |
+
+### Thai Buddhist 資料驗證
+
+| 項目 | 結果 |
+|------|------|
+| JSON / CSV 筆數一致 | ✅ 7042 筆 |
+| 內部規則驗證 | ✅ 通過 |
+| `myhora` 1997–2027 全量交叉驗證 | ⚠️ 存在部分年份 1 天差異 |
+
+說明：Thai Buddhist 資料集目前可視為「規則推算版」，內部一致性完整，但與 `myhora` 在 `1997–2027` 的部分年份存在系統性 1 天偏移，推測與日界線規則不同有關。詳見 `THAI_BUDDHIST_VERIFICATION.md`。
 
 ## 技術架構
 

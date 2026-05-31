@@ -9,6 +9,7 @@ const PRECACHE_URLS = [
   '/LunarData/ninestar.html',
   '/LunarData/assets/holidays.js',
   '/LunarData/assets/holidays.json',
+  '/LunarData/assets/thai-buddhist-days.js',
   '/LunarData/assets/zodiac/rat.png',
   '/LunarData/assets/zodiac/ox.png',
   '/LunarData/assets/zodiac/tiger.png',

@@ -1826,6 +1826,7 @@ function loadViaScript(y, m) {
 }
 
 let holidaysData = null;
+let thaiBuddhistDataByDate = null;
 
 async function loadHolidays() {
   if (holidaysData) return holidaysData;
@@ -1851,9 +1852,116 @@ async function loadHolidays() {
   }
 }
 
+async function loadThaiBuddhistData() {
+  if (thaiBuddhistDataByDate) return thaiBuddhistDataByDate;
+  try {
+    const bust = Date.now();
+    const base = getBasePath();
+    const script = document.createElement('script');
+    script.src = `${base}assets/thai-buddhist-days.js?v=${bust}`;
+    return new Promise((resolve) => {
+      script.onload = function() {
+        thaiBuddhistDataByDate = window.ThaiBuddhistDataByDate || {};
+        document.head.removeChild(script);
+        resolve(thaiBuddhistDataByDate);
+      };
+      script.onerror = function() {
+        document.head.removeChild(script);
+        resolve({});
+      };
+      document.head.appendChild(script);
+    });
+  } catch (e) {
+    return {};
+  }
+}
+
 function getHolidaysForDate(month, day) {
   if (!holidaysData) return [];
   return holidaysData.filter(h => h.month === month && h.day === day);
+}
+
+function getThaiBuddhistEventsForDate(dt) {
+  if (!thaiBuddhistDataByDate) return [];
+  return thaiBuddhistDataByDate[formatDate(dt)] || [];
+}
+
+function getThaiBuddhistBadge(eventId) {
+  const map = {
+    wan_phra: '佛日',
+    makha_bucha: '佛教節日',
+    visakha_bucha: '佛教節日',
+    khao_phansa: '安居節日',
+    ok_phansa: '安居節日',
+    sao_ha_candidate: '民俗候選'
+  };
+  return map[eventId] || '參考資料';
+}
+
+function getThaiBuddhistBadgeStyle(eventId) {
+  const map = {
+    wan_phra: 'background:#fff4d6;color:#8a5a00;border:1px solid #e7c979;',
+    makha_bucha: 'background:#f8efe1;color:#8c4b00;border:1px solid #e1c38e;',
+    visakha_bucha: 'background:#f8efe1;color:#8c4b00;border:1px solid #e1c38e;',
+    khao_phansa: 'background:#efe8fb;color:#5b3f92;border:1px solid #cdbef0;',
+    ok_phansa: 'background:#fff0e3;color:#9a4f00;border:1px solid #edc39a;',
+    sao_ha_candidate: 'background:#f3f0e7;color:#73644a;border:1px solid #d8ceb8;'
+  };
+  return map[eventId] || 'background:#f7f1e8;color:#6a5330;border:1px solid #dfd0b7;';
+}
+
+function getThaiBuddhistEmoji(eventId) {
+  const map = {
+    wan_phra: '☸️',
+    makha_bucha: '🙏',
+    visakha_bucha: '🕯️',
+    khao_phansa: '🛕',
+    ok_phansa: '🏮',
+    sao_ha_candidate: '📿'
+  };
+  return map[eventId] || '☸️';
+}
+
+function renderThaiBuddhistSection(dt) {
+  const events = getThaiBuddhistEventsForDate(dt);
+
+  return `
+    <div class="card full" style="margin-bottom:1.5rem;">
+      <div class="card-title"><span class="icon">☸️</span> 泰國佛日參考資料（規則推算版）</div>
+      <div style="margin:-.15rem 0 .9rem;color:var(--text-light);font-size:.82rem;line-height:1.7;">
+        依規則推算整理，可能與外部年表有 1 天差異，請作為參考資料使用。
+      </div>
+      ${events.length > 0 ? `
+      <div class="deity-list">
+        ${events.map(event => `
+          <div class="deity-item" onclick="this.querySelector('.deity-detail').classList.toggle('show')" style="cursor:pointer;">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem;">
+              <div style="display:flex;gap:.65rem;align-items:flex-start;min-width:0;">
+                <div style="font-size:1.2rem;line-height:1.1;flex-shrink:0;">${getThaiBuddhistEmoji(event.eventId)}</div>
+                <div style="min-width:0;text-align:left;">
+                  <div style="font-weight:900;font-size:1.18rem;line-height:1.25;color:var(--dark-red);letter-spacing:.04em;">${event.nameZh}</div>
+                  <div style="font-size:.8rem;color:var(--text-light);margin-top:.2rem;line-height:1.45;">${event.nameThai}${event.nameEn ? ` <span style="opacity:.7;">/</span> ${event.nameEn}` : ''}</div>
+                </div>
+              </div>
+              <span style="${getThaiBuddhistBadgeStyle(event.eventId)}padding:.18rem .55rem;border-radius:999px;font-size:.72rem;font-weight:800;white-space:nowrap;flex-shrink:0;">${getThaiBuddhistBadge(event.eventId)}</span>
+            </div>
+            <div class="deity-detail">
+              <div style="margin-top:.55rem;font-size:.85rem;color:var(--text);line-height:1.7;text-align:left;">
+                <div><b>泰曆：</b>佛曆 ${event.buddhistEraYear} 年，${event.thaiLunarText}</div>
+                <div><b>星期：</b>${event.weekdayZh}</div>
+                ${event.note ? `<div style="margin-top:.5rem;padding-top:.5rem;border-top:1px dashed #e8d5b0;font-size:.8rem;color:#888;"><b>備註：</b>${event.note}</div>` : ''}
+              </div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+      ` : `
+      <div style="padding:.85rem 1rem;border:1px dashed var(--border);border-radius:10px;background:#fffaf2;color:var(--text-light);font-size:.88rem;line-height:1.7;">
+        今日無對應泰國佛日資料；鄰近日期若有佛日、佛教節日或民俗候選日，會顯示在這裡。
+      </div>
+      `}
+    </div>
+  `;
 }
 
 function renderHolidays(dt) {
@@ -1892,6 +2000,7 @@ async function loadData() {
 
   try {
     await loadHolidays();
+    await loadThaiBuddhistData();
     const data = await loadViaScript(y, m);
     if (!data || !data.days) throw new Error('資料格式錯誤');
     const dayData = data.days.find(day => day.day === d);
@@ -1937,6 +2046,9 @@ function render(d, monthData) {
 
   <!-- 西曆節日 -->
   <div id="holiday-section"></div>
+
+  <!-- 泰國佛日參考資料 -->
+  <div id="thai-buddhist-section"></div>
 
   <!-- 圖表區域 -->
   <div class="charts-section charts-top">
@@ -2262,6 +2374,9 @@ function render(d, monthData) {
   // 渲染節日
   const holidayHtml = renderHolidays(currentDate);
   document.getElementById('holiday-section').innerHTML = holidayHtml;
+
+  const thaiBuddhistHtml = renderThaiBuddhistSection(currentDate);
+  document.getElementById('thai-buddhist-section').innerHTML = thaiBuddhistHtml;
 }
 
 function renderNineStar(str) {
