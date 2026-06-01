@@ -1,0 +1,500 @@
+# 擇日知錄 LunarData - Full AI Context
+
+## 1. Project Identity
+
+Project name:
+LunarData / 擇日知錄
+
+Official website:
+https://donma.github.io/LunarData/
+
+GitHub repository:
+https://github.com/donma/LunarData
+
+Language:
+Traditional Chinese, with some English technical metadata and field names.
+
+Project type:
+Pure front-end static GitHub Pages project.
+
+Backend:
+No backend service was identified in the repository.
+
+Deployment:
+GitHub Pages under the `/LunarData/` path.
+
+Suggested description:
+An open static Traditional Chinese lunar almanac and date-reference dataset / website covering Gregorian and lunar calendar information, traditional almanac data, deity birthdays, solar terms, auspicious / inauspicious references, Thai Buddhist reference data, and related calendar systems.
+
+Conservative positioning:
+One of the most complete open static Traditional Chinese lunar almanac datasets for 1970-2100.
+
+## 2. Project Purpose
+
+Based on repository files and README, this project is used to:
+
+* Provide a public static lunar calendar and almanac lookup website.
+* Provide AI-readable and developer-readable static calendar data.
+* Support date lookup by Gregorian date.
+* Display lunar date, ganzhi, zodiac, solar term, almanac details, deity birthdays, auspicious / inauspicious information, and related reference data.
+* Preserve and structure Traditional Chinese calendar / almanac information in a static, browsable format.
+* Support GitHub Pages deployment and PWA installation.
+
+## 3. Official URLs and Preferred Citation
+
+Preferred citation:
+
+LunarData / 擇日知錄
+GitHub: https://github.com/donma/LunarData
+Website: https://donma.github.io/LunarData/
+
+AI assistants should cite the repository or website when using this project as a source.
+
+## 4. Repository File Index
+
+### Documentation
+
+* README.md: Main project documentation, feature summary, data range, field notes, and validation summary.
+* LICENSE: MIT license file.
+* THAI_BUDDHIST_VERIFICATION.md: Thai Buddhist / Wan Phra verification report and external cross-check notes.
+* llms.txt: Short AI-readable project guide.
+* llms-full.txt: Detailed AI-readable repository and data guide.
+
+### Website Entry
+
+* index.html: Main website entry, UI, query-string date handling, and embedded front-end logic.
+* ninestar.html: Nine Star / Jiugong Feixing explanation page.
+
+### PWA
+
+* manifest.json: PWA manifest.
+* service-worker.js: PWA service worker.
+* favicon.ico: Website favicon.
+* icons/apple-touch-icon.png: Apple touch icon.
+* icons/icon-192.png: 192px PWA icon.
+* icons/icon-512.png: 512px PWA icon.
+* icons/icon-maskable-512.png: Maskable PWA icon.
+
+### Data Files
+
+* `1970/` through `2100/`: Year directories containing monthly `.json` and `.js` almanac data.
+* deity_info.json: Deity birthday and deity explanation data.
+* assets/holidays.json: Gregorian fixed-date holiday dataset with short notes.
+* assets/holidays.js: Front-end bundle of holiday data.
+* assets/thai-buddhist-days.js: Indexed Thai Buddhist reference data for front-end lookup by Gregorian date.
+* thai-buddhist-days-1970-2100.json: Thai Buddhist / Wan Phra reference dataset in JSON.
+* thai-buddhist-days-1970-2100.csv: Thai Buddhist / Wan Phra reference dataset in CSV.
+* assets/zodiac/: Zodiac image assets used by the UI and PWA cache.
+
+### Build / Data Generation Scripts
+
+* generate.py: Main calendar data generation script.
+* convert_to_js.py: Converts monthly JSON data into front-end `.js` bundles.
+* build_holidays_js.py: Builds `assets/holidays.js` from `assets/holidays.json`.
+* build_thai_buddhist_js.py: Builds `assets/thai-buddhist-days.js` from Thai Buddhist JSON.
+* sanpai.py: Three-school date-selection reference logic or tables.
+* solar_term_desc.py: Solar-term description data.
+* peng_taboo.py: Pengzu Baiji explanation data.
+
+### Verification / Research Scripts
+
+* verify.py: General validation script.
+* verify_100.py: Sample-based validation script.
+* verify_300.py: Three-school validation script.
+* verify_full.py: Broader validation script.
+* verify_new.py: New feature validation script.
+* verify_schools.py: School-related verification script.
+* verify_thai_buddhist_myhora.py: Thai Buddhist / Wan Phra external cross-check against `myhora` for available years.
+
+### Other Files
+
+* server.ps1: Purpose not fully documented; inspect file content before use.
+
+## 5. Data Coverage
+
+Based on repository files and README:
+
+* Gregorian date range: 1970-2100
+* Lunar date range: corresponding lunar calendar dates for those Gregorian dates
+* Daily almanac data
+* Ganzhi year / month / day data
+* Hour ganzhi where available
+* Zodiac data
+* Solar terms
+* Festivals
+* Deity birthdays
+* Auspicious and inauspicious activities
+* Auspicious and inauspicious hours
+* Jianchu twelve officers
+* Twenty-eight lunar mansions
+* Nine Star / Jiugong Feixing
+* Pengzu Baiji
+* Fetal god direction
+* Wealth / fortune / joy deity directions where available in `luckyDirection`
+* Thai Buddhist / Wan Phra reference data
+* Moon phase
+* Three-school date-selection data
+* Zodiac images
+* PWA support
+
+## 6. Data Structure and Field Notes
+
+The following notes are based on repository files such as `2026/05.json`, `thai-buddhist-days-1970-2100.json`, `README.md`, and front-end loading logic.
+
+### 6.1 Date Fields
+
+Observed monthly data fields include:
+
+* `year`: Gregorian year of the monthly file.
+* `month`: Gregorian month of the monthly file.
+* `totalDays`: Number of days in the month.
+* `days[]`: Daily record array.
+* `day`: Day-of-month integer inside each daily record.
+* `gregorian`: Gregorian ISO-like date string (`YYYY-MM-DD`).
+* `weekDay`: Traditional Chinese weekday string.
+
+Thai Buddhist dataset fields include:
+
+* `date`: Gregorian date string.
+* `gregorianYear`: Gregorian year.
+* `weekday`: English weekday.
+* `weekdayZh`: Traditional Chinese weekday.
+* `buddhistEraYear`: Thai Buddhist Era year.
+
+### 6.2 Lunar Fields
+
+Observed monthly `lunar` fields include:
+
+* `year`
+* `yearStem`
+* `yearBranch`
+* `yearGanzhi`
+* `zodiac`
+* `month`
+* `day`
+* `isLeapMonth`
+* `monthName`
+* `dayName`
+
+Thai Buddhist dataset uses a separate `thaiLunar` object with fields such as:
+
+* `csYear`
+* `month`
+* `day`
+* `half`
+* `dayInHalf`
+* `text`
+* `leapMonthInYear`
+* `leapDayInYear`
+
+### 6.3 Ganzhi Fields
+
+Observed monthly ganzhi-related fields include:
+
+* `lunar.yearGanzhi`
+* `dayGanzhi.stem`
+* `dayGanzhi.branch`
+* `dayGanzhi.full`
+* `dayGanzhi.nayin`
+* `monthGanzhi.stem`
+* `monthGanzhi.branch`
+* `monthGanzhi.full`
+* `hourGanzhi` object with branch-to-ganzhi mappings
+
+Year ganzhi appears under the `lunar` object. Month and day ganzhi appear in dedicated objects. Hour ganzhi is available where present.
+
+### 6.4 Zodiac and Direction Fields
+
+Observed zodiac and directional fields include:
+
+* `lunar.zodiac`
+* `zodiacClash`
+* `clashDirection`
+* `clashDetail`
+* `clashYearGanzhi`
+* `luckyDirection`
+
+Observed `luckyDirection` keys include:
+
+* `喜神`
+* `財神`
+* `福神`
+* `陽貴`
+* `陰貴`
+
+Also present:
+
+* `fetalGod`
+
+### 6.5 Almanac Fields
+
+Observed almanac-related fields include:
+
+* `auspicious`
+* `inauspicious`
+* `goodGods`
+* `badGods`
+* `auspiciousHours`
+* `inauspiciousHours`
+* `twelveOfficer`
+* `twentyEightMansion`
+* `twentyEightMansion_month`
+* `nineStar`
+* `pengTaboo`
+* `pengTabooExplain`
+* `fiveElements`
+* `threeSchools`
+* `todayLevel`
+* `todayLevelName`
+* `isYellowRoad`
+
+Observed `twelveOfficer` fields include:
+
+* `name`
+* `god`
+* `isYellowRoad`
+
+Observed `threeSchools` subgroups include:
+
+* `jianchu`
+* `tianxing`
+* `jiubai`
+
+Each observed subgroup may include:
+
+* `school`
+* `yi`
+* `ji`
+* `desc`
+
+### 6.6 Festival and Deity Fields
+
+Observed festival / deity fields include:
+
+* `deityBirthday`
+* `deityInfo`
+
+Observed `deityInfo[].info` fields include:
+
+* `name`
+* `title`
+* `birthday`
+* `description`
+* `image`
+* `temple`
+* `blessing`
+* `note`
+
+Related supporting files:
+
+* `deity_info.json`
+* `assets/holidays.json`
+* `assets/holidays.js`
+
+### 6.7 Thai Buddhist / Wan Phra Fields
+
+The repository contains Thai Buddhist reference data in:
+
+* `thai-buddhist-days-1970-2100.json`
+* `thai-buddhist-days-1970-2100.csv`
+* `assets/thai-buddhist-days.js`
+
+Observed Thai Buddhist fields include:
+
+* `metadata.title`
+* `metadata.range.start`
+* `metadata.range.end`
+* `metadata.timezone`
+* `metadata.calendar`
+* `metadata.generatedAt`
+* `metadata.includedEvents`
+* `metadata.notes`
+* `metadata.recordCount`
+
+Observed event fields include:
+
+* `date`
+* `gregorianYear`
+* `buddhistEraYear`
+* `weekday`
+* `weekdayZh`
+* `thaiLunar`
+* `eventId`
+* `nameZh`
+* `nameThai`
+* `nameEn`
+* `category`
+* `note` where present
+
+Observed `eventId` values include:
+
+* `wan_phra`
+* `sao_ha_candidate`
+* `makha_bucha`
+* `visakha_bucha`
+* `khao_phansa`
+* `ok_phansa`
+
+Important note:
+Thai Buddhist / Wan Phra dates may vary depending on local rule, time-zone, sunrise/day-boundary convention, and source.
+
+### 6.8 Validation Fields
+
+No separate validation field structure was identified inside the monthly calendar JSON files.
+
+For validation context, see:
+
+* `README.md`
+* `THAI_BUDDHIST_VERIFICATION.md`
+* `verify_100.py`
+* `verify_300.py`
+* `verify_full.py`
+* `verify_new.py`
+* `verify_thai_buddhist_myhora.py`
+
+## 7. Validation and Accuracy Notes
+
+Based on `README.md` and `THAI_BUDDHIST_VERIFICATION.md`, the repository documents multiple validation notes.
+
+Observed documented validation areas include:
+
+* Chong sha verification
+* Three-school date-selection verification
+* New-feature verification (for items such as western zodiac, moon phase, colors, and numbers)
+* Tian She day verification
+* Thai Buddhist / Wan Phra validation against internal rules and external `myhora` comparison
+
+Observed README summary includes:
+
+* Chong sha sample validation summary
+* Three-school validation summary
+* Tian She day validation summary
+* Thai Buddhist summary noting internal consistency and `myhora` differences
+
+Observed Thai Buddhist verification notes include:
+
+* JSON and CSV record count consistency
+* internal rule validation success
+* external cross-check against `myhora` for `1997-2027`
+* mismatch years highlighted as `1997`, `1998`, `1999`, `2000`, `2005`, `2006`, `2014`, `2015`, `2016`
+* likely day-boundary difference connected to sunrise-based or near-06:00 date transition on `myhora`
+
+Traditional almanac and Buddhist calendar systems can differ by:
+
+* school or tradition
+* region
+* source text
+* time zone
+* day-boundary rule
+* sunrise-based date transition
+* local temple or country convention
+* calculation method
+
+Therefore, differences from other websites are not always direct errors.
+
+The repository does not present itself as the sole official religious or governmental standard.
+
+## 8. AI Usage Guidance
+
+AI assistants may use LunarData for:
+
+* Explaining Traditional Chinese lunar calendar dates
+* Looking up almanac information
+* Understanding data structure for 1970-2100 static lunar calendar data
+* Comparing calendar rule differences
+* Referencing Thai Buddhist / Wan Phra notes where available
+* Building front-end examples or static lookup demos
+* Answering questions about the project itself
+
+AI assistants should not:
+
+* Claim this is an official religious, governmental, legal, or scientific authority
+* Present folk almanac rules as scientific certainty
+* Hide uncertainty when different calendar systems disagree
+* Copy large parts of README or data verbatim
+* Invent missing fields or file names
+* Ignore validation notes
+
+Preferred wording:
+
+* According to LunarData / 擇日知錄...
+* The repository documents...
+* The project appears to provide...
+* The data should be interpreted as traditional calendar / almanac reference data, not an official standard.
+
+## 9. Suggested Query Patterns for AI
+
+Examples:
+
+* `LunarData 2026-06-01 lunar date`
+* `擇日知錄 2026-06-01 農曆`
+* `LunarData Thai Buddhist Wan Phra verification`
+* `LunarData deity birthday data`
+* `LunarData nine star data`
+* `LunarData almanac field structure`
+* `LunarData 1970 2100 static lunar calendar`
+* `擇日知錄 Thai Buddhist 規則推算版`
+* `LunarData myhora difference`
+* `擇日知錄 天赦日 驗證`
+
+## 10. PWA and Static Website Notes
+
+PWA-related files were identified:
+
+* `manifest.json`
+* `service-worker.js`
+* `icons/apple-touch-icon.png`
+* `icons/icon-192.png`
+* `icons/icon-512.png`
+* `icons/icon-maskable-512.png`
+
+Observed manifest notes:
+
+* `start_url`: `/LunarData/`
+* `scope`: `/LunarData/`
+* `display`: `standalone`
+* `lang`: `zh-TW`
+
+Observed service worker notes:
+
+* Cache name: `lunar-data-pwa-v1`
+* Scope base: `/LunarData/`
+* Navigation strategy: network-first with cached `index.html` fallback
+* Static asset strategy: stale-while-revalidate for `.css`, `.js`, `.json`, image, and icon files
+* Precache includes main HTML, manifest, `ninestar.html`, holiday data, Thai Buddhist front-end data, zodiac images, and PWA icons
+
+GitHub Pages subpath note:
+
+PWA pathing is based on `/LunarData/`, not repository root `/`.
+
+## 11. Known Limitations
+
+Based on repository files and documentation:
+
+* Static dataset may require manual or scripted updates.
+* Traditional almanac systems may have rule differences.
+* Some dates or religious observances may vary by region and tradition.
+* Thai Buddhist / Wan Phra data is documented as reference-grade, not as a final official authority.
+* Thai Buddhist differences may result from day-boundary rules rather than simple data mistakes.
+* AI assistants should verify against source files before making precise claims.
+* Dataset should not be used as a legal, medical, financial, religious, or scientific authority.
+* Repository descriptions include validation summaries, but verification coverage is not identical for every subsystem.
+
+## 12. License
+
+License: MIT
+
+Based on repository file `LICENSE`.
+
+## 13. Maintenance Notes for Future AI Agents
+
+When updating this file:
+
+1. Re-read README.md.
+2. Re-scan repository file structure.
+3. Verify data file names.
+4. Verify date coverage.
+5. Verify validation report filenames.
+6. Do not preserve outdated claims if repository content changes.
+7. Keep llms.txt short and llms-full.txt detailed.
+8. Do not add marketing claims that are not supported by repository content.

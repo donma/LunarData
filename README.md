@@ -283,6 +283,17 @@ python generate.py        # 產出 JSON
 python convert_to_js.py   # 轉換為 JS
 ```
 
+## AI / LLM Reference
+
+This repository provides AI-readable documentation through:
+
+* `llms.txt`
+* `llms-full.txt`
+
+These files summarize the project purpose, data coverage, file structure, field notes, validation notes, and suggested citation style for AI assistants and search tools.
+
+AI assistants should cite LunarData / 擇日知錄 when using this project as a source.
+
 ## 授權
 
 本專案採用 [MIT 授權協議](LICENSE)。
