@@ -261,6 +261,9 @@
     transition: all .2s;
     position: relative;
     cursor: help;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
   }
   .yiji-tag.yi { border-color: #a5d6a7; color: #2e7d32; }
   .yiji-tag.ji { border-color: #ef9a9a; color: #c62828; }
@@ -295,7 +298,7 @@
     border-top-color: #333;
   }
   .yiji-tag:hover .tip,
-  .yiji-tag:active .tip {
+  .yiji-tag.tip-visible .tip {
     display: block;
   }
   @media (max-width: 768px) {
@@ -417,6 +420,9 @@
     padding: .5rem;
     position: relative;
     cursor: help;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
   }
   .star-display .tip {
     display: none;
@@ -446,7 +452,8 @@
     border: 6px solid transparent;
     border-top-color: #333;
   }
-  .star-display:hover .tip {
+  .star-display:hover .tip,
+  .star-display.tip-visible .tip {
     display: block;
   }
 
@@ -526,6 +533,9 @@
     font-size: .8rem;
     position: relative;
     cursor: help;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
   }
   .god-tag.good { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
   .god-tag.bad { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
@@ -557,7 +567,7 @@
     border-top-color: #333;
   }
   .god-tag:hover .tip,
-  .god-tag:active .tip {
+  .god-tag.tip-visible .tip {
     display: block;
   }
   @media (max-width: 768px) {
@@ -2384,6 +2394,18 @@ function renderNineStar(str) {
   }
   return html;
 }
+
+document.addEventListener('click', function(e) {
+  const tag = e.target.closest('.yiji-tag, .god-tag, .star-display');
+  if (tag && tag.querySelector('.tip')) {
+    e.stopPropagation();
+    const wasVisible = tag.classList.contains('tip-visible');
+    document.querySelectorAll('.tip-visible').forEach(el => el.classList.remove('tip-visible'));
+    if (!wasVisible) tag.classList.add('tip-visible');
+    return;
+  }
+  document.querySelectorAll('.tip-visible').forEach(el => el.classList.remove('tip-visible'));
+});
 
 // ============================
 // 圖表渲染函數
