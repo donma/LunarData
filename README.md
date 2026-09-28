@@ -243,6 +243,28 @@ console.log(day.inauspicious);
 
 ---
 
+## 設計取向：資料優先
+
+LunarData 的想法其實很單純：**Data-first、Schema-first、Agent-first**，而不是 SDK-first。
+
+因此這個專案刻意沒有提供各種語言專用的 SDK。
+
+不是不能做，而是不需要。
+
+因為資料本身就是介面，Schema 就是說明文件。JSON 是語言中立的，應用程式或 AI Agent 可以直接讀取、轉換、索引或匯入，不必先等某個語言的封裝完成，也不會被特定 SDK 的版本或 API 設計綁住。
+
+上面提到的 JavaScript 格式，只是讓瀏覽器可以直接使用的便利版本，並非唯一的存取方式。
+
+換個角度說，你的工具鍊怎麼走，資料就怎麼配合：
+
+- 用 Pandas、DuckDB，直接讀 JSON
+- 用 Python、Go、Rust，直接解析同一份檔案
+- 用 LLM / Agent，直接吃進去做 RAG 或推論
+
+少一層包裝，就少一層等待與隔閡。
+
+---
+
 ## 九宮飛星
 
 專案另外提供：
